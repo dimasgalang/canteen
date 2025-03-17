@@ -2,6 +2,10 @@
 
 namespace App\Providers;
 
+use App\Models\User;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -19,6 +23,18 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        config(['app.locale' => 'id']);
+	    Carbon::setLocale('id');
+        view()->composer('*', function ($view) {
+            if (Auth::check()) {
+                $roles = User::select('users.name', 'users.email', 'users.id', 'model_has_roles.*', 'roles.name as rolename')
+                    ->leftJoin('model_has_roles', 'model_has_roles.model_id', '=', 'users.id')
+                    ->leftJoin('roles', 'roles.id', '=', 'model_has_roles.role_id')
+                    ->where('users.id', '=', Auth::user()->id)
+                    ->get();
+
+                View::share(['roles' => $roles]);
+            }
+        });
     }
 }

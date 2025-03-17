@@ -115,7 +115,8 @@
 
     function onScanSuccess(decodedText, decodedResult) {
         // redirect ke link hasil scan
-        var decoder = "canteen?npk=" + decodedResult.decodedText + "&canteen_no=2";
+        // var decoder = "canteen?npk=" + decodedResult.decodedText + "&canteen_no=1";
+        var decoder = decodedResult.decodedText + "&canteen_no=1";
         // alert(decoder);
         window.location.href = decoder;
         html5QRCodeScanner.clear();

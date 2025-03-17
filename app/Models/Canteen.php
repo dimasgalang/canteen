@@ -12,5 +12,7 @@ class Canteen extends Model
     protected $fillable = [
         'canteen_no',
         'npk',
+        'name',
+        'date',
     ];
 }

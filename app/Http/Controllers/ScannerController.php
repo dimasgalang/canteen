@@ -7,6 +7,7 @@ use App\Models\QRCode;
 use App\Models\QRFiles;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use RealRashid\SweetAlert\Facades\Alert;
 use SimpleSoftwareIO\QrCode\Facades\QrCode as FacadesQrCode;
@@ -15,7 +16,7 @@ class ScannerController extends Controller
 {
     public function qrscanning()
     {
-        return view('scanner.qrscanning');
+        return view('scanner.qrscanning2');
     }
 
     public function scanning()
@@ -32,6 +33,7 @@ class ScannerController extends Controller
     {
         $this->validate($request, [
             'npk' => 'required',
+            'name' => 'required',
             'canteen_no' => 'required',
         ]);
 
@@ -45,6 +47,7 @@ class ScannerController extends Controller
 
         QRFiles::firstOrCreate([
             'npk' => $request->npk,
+            'name' => $request->name,
             'canteen_no' => $request->canteen_no,
             'qr_data' => $qr_data,
             'qr_name' => $qrImageName,
@@ -61,6 +64,7 @@ class ScannerController extends Controller
         $checkExist = Canteen::select("*")->where('created_at', '<=', Carbon::now()->subHours(0)->toDateTimeString())->where('npk', '=', $request->npk)->get();
         $this->validate($request, [
             'npk' => 'required',
+            'name' => 'required',
             'canteen_no' => 'required',
         ]);
 
@@ -68,10 +72,11 @@ class ScannerController extends Controller
             Canteen::firstOrCreate([
                 'canteen_no' => $request->canteen_no,
                 'npk' => $request->npk,
+                'name' => $request->name,
             ]);
         }
 
-        Alert::success('Scan Successfully!', 'Employee ' . $request->npk . ' successfully scanned!');
+        Alert::success('Scan Successfully!', 'Employee ' . $request->npk . ' - ' . $request->name . ' successfully scanned!');
         return redirect('/scanner/qrscanning');
     }
 

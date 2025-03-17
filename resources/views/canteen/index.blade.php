@@ -18,46 +18,35 @@
                 <!-- Page Heading -->
                 <div class="d-sm-flex align-items-center justify-content-between mb-4">
                     <h1 class="h3 mb-0 text-gray-800">Canteen List</h1>
+                    <a href="{{ route('canteen.export') }}" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i class="fas fa-plus fa-sm text-white-50"></i> Export Excel</a>
                 </div>
                 
-                <!-- DataTales Example -->
-                <div class="card shadow mb-4">
-                    <div class="card-header py-3 d-sm-flex align-items-center justify-content-between mb-4">
-                        <h6 class="m-0 font-weight-bold text-primary">Canteen Data</h6>
-                        <form method="GET" id="form-void">
-                                <select name="void" id="void" class="form-control" onchange="document.getElementById('form-void').submit()" style="width: 300px;">
-                                    <option disabled selected hidden>Select Status</option>
-                                    <option value="false" {{ app('request')->input('void') == 'false'  ? 'selected' : ''}}>Active</option>
-                                    <option value="true" {{ app('request')->input('void') == 'true'  ? 'selected' : ''}}>Void</option>
-                                </select>
-                        </form>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-bordered table-sm" id="dataTable" width="100%" cellspacing="0">
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>NPK</th>
-                                        <th>Canteen</th>
-                                        <th>Time Scanning</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($canteens as $canteen)
-                                    <tr>
-                                        <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $canteen->npk }}</td>
-                                        <td>{{ $canteen->canteen_no }}</td>
-                                        <td>{{ $canteen->created_at }}</td>
-                                    </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3 d-sm-flex align-items-center justify-content-between mb-4">
+                                <h6 class="m-0 font-weight-bold text-primary">Canteen Data</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-sm" id="dataTable" width="100%" cellspacing="0">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>NPK</th>
+                                                <th>Nama Karyawan</th>
+                                                <th>Canteen</th>
+                                                <th>Time Scanning</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <!-- Content Row -->
 
             </div>
             <!-- /.container-fluid -->
@@ -92,5 +81,23 @@
 
 <!-- Page level custom scripts -->
 <script src="{{asset('js/demo/datatables-demo.js')}}"></script>
+<script>
+    var tableCanteen = $('#dataTable').DataTable({
+    destroy: true,
+    responsive: true,
+    serverside:true,
+    ajax: '{{ route("canteen.showcanteen") }}',
+    columns: [
+            { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
+            { data: 'npk', name: 'npk', orderable: false },
+            { data: 'name', name: 'name', orderable: false },
+            { data: 'canteen_no', name: 'canteen_no', orderable: false },
+            { data: 'created_at_formated', name: 'created_at_formated', orderable: false },
+        ],
+    });
+    setInterval( function () {
+        tableCanteen.ajax.reload();
+    }, 1000);
+</script>
 
 </html>

@@ -3,6 +3,7 @@
 use App\Http\Controllers\ApprovalController;
 use App\Http\Controllers\CanteenController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\RoleController;
@@ -61,14 +62,30 @@ Route::group(['middleware' => 'auth'], function () {
 
     //Canteen
     Route::get('/canteen/index', [CanteenController::class, 'index'])->name('canteen.index');
+    Route::get('/canteen/showcanteen', [CanteenController::class, 'showcanteen'])->name('canteen.showcanteen');
+    Route::get('/canteen/showcanteen1', [CanteenController::class, 'showcanteen1'])->name('canteen.showcanteen1');
+    Route::get('/canteen/showcanteen2', [CanteenController::class, 'showcanteen2'])->name('canteen.showcanteen2');
+    Route::get('/canteen/canteen', [CanteenController::class, 'canteen'])->name('canteen.canteen');
+    Route::get('/canteen/canteen1', [CanteenController::class, 'canteen1'])->name('canteen.canteen1');
+    Route::get('/canteen/canteen2', [CanteenController::class, 'canteen2'])->name('canteen.canteen2');
+    Route::get('/canteen/scancanteen1', [CanteenController::class, 'scancanteen1'])->name('canteen.scancanteen1');
+    Route::get('/canteen/scancanteen2', [CanteenController::class, 'scancanteen2'])->name('canteen.scancanteen2');
 
     //Scanner
     Route::get('/scanner/index', [ScannerController::class, 'index'])->name('scanner.index');
     Route::get('/scanner/qrscanning', [ScannerController::class, 'qrscanning'])->name('scanner.qrscanning');
     Route::get('/scanner/scanning', [ScannerController::class, 'scanning'])->name('scanner.scanning');
     Route::get('/scanner/create', [ScannerController::class, 'create'])->name('scanner.create');
+    Route::get('/scanner/batch', [ScannerController::class, 'batch'])->name('scanner.batch');
     Route::post('/scanner/store', [ScannerController::class, 'store'])->name('scanner.store');
     Route::get('/scanner/store', [ScannerController::class, 'store'])->name('scanner.store');
     Route::get('/scanner/canteen', [ScannerController::class, 'canteen'])->name('scanner.canteen');
     Route::get('/scanner/barcode', [ScannerController::class, 'barcode'])->name('scanner.barcode');
+
+    //Karyawan
+    Route::get('/karyawan/index', [KaryawanController::class, 'index'])->name('karyawan.index');
+    Route::get('/karyawan/detail/{id}', [KaryawanController::class, 'show'])->name('karyawan.detail');
+
+    //Export
+    Route::get('/canteen/export', [CanteenController::class, 'export_excel'])->name('canteen.export');
 });

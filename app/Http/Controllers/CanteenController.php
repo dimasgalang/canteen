@@ -2,13 +2,151 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\CanteensExport;
 use App\Models\Canteen;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
+use Maatwebsite\Excel\Facades\Excel;
+use RealRashid\SweetAlert\Facades\Alert;
+use Yajra\DataTables\Facades\DataTables;
 
 class CanteenController extends Controller
 {
-    public function index() {
-        $canteens = Canteen::all();
+    public function index()
+    {
+        $canteens = Canteen::select('*')->where('date', '=', Carbon::today()->toDateString())->orderByDesc('created_at')->get();
         return view('canteen.index', compact('canteens'));
     }
+
+    public function scancanteen1()
+    {
+        $canteens = Canteen::select('*')->where('date', '=', Carbon::today()->toDateString())->where('canteen_no', '=', '1')->orderByDesc('created_at')->get();
+        // dd(Carbon::today()->toDateString());
+        return view('canteen.canteen1', compact('canteens'));
+    }
+
+    public function scancanteen2()
+    {
+        $canteens = Canteen::select('*')->where('date', '>', Carbon::today()->toDateString())->where('canteen_no', '=', '2')->orderByDesc('created_at')->get();
+        return view('canteen.canteen2', compact('canteens'));
+    }
+
+    public function showcanteen()
+    {
+        $canteens = Canteen::orderBy('created_at', 'desc')->where('date', '=', Carbon::today()->toDateString())->get();
+        return DataTables::of($canteens)
+            ->addIndexColumn()
+            ->addColumn('created_at_formated', function ($row) {
+                return date('d-m-Y h:m:s', strtotime($row->created_at));
+            })
+            ->rawColumns(['created_at_formated'])
+            ->make(true);
+    }
+
+
+    public function showcanteen1()
+    {
+        $canteens = Canteen::orderBy('created_at', 'desc')->where('date', '=', Carbon::today()->toDateString())->where('canteen_no', '=', '1')->get();
+        return DataTables::of($canteens)
+            ->addIndexColumn()
+            ->addColumn('created_at_formated', function ($row) {
+                return date('d-m-Y h:m:s', strtotime($row->created_at));
+            })
+            ->rawColumns(['created_at_formated'])
+            ->make(true);
+    }
+
+
+    public function showcanteen2()
+    {
+        $canteens = Canteen::orderBy('created_at', 'desc')->where('date', '=', Carbon::today()->toDateString())->where('canteen_no', '=', '2')->get();
+        return DataTables::of($canteens)
+            ->addIndexColumn()
+            ->addColumn('created_at_formated', function ($row) {
+                return date('d-m-Y h:m:s', strtotime($row->created_at));
+            })
+            ->rawColumns(['created_at_formated'])
+            ->make(true);
+    }
+
+    public function canteen(Request $request)
+    {
+        $checkExist = Canteen::select("*")->where('date', '=', Carbon::today()->toDateString())->where('npk', '=', $request->npk)->get();
+        $this->validate($request, [
+            'npk' => 'required',
+            'name' => 'required',
+            'date' => 'required',
+            'canteen_no' => 'required',
+        ]);
+
+        if (count($checkExist) < 1) {
+            Canteen::firstOrCreate([
+                'canteen_no' => $request->canteen_no,
+                'npk' => $request->npk,
+                'name' => $request->name,
+                'date' => $request->date,
+            ]);
+            Alert::success('Scan Successfully!', 'Employee ' . $request->npk . ' - ' . $request->name . ' successfully scanned!');
+        } else {
+            Alert::error('Alert!', 'Employee ' . $request->npk . ' - ' . $request->name . ' already scanned!');
+        }
+
+        return Redirect::back();
+    }
+
+    public function canteen1(Request $request)
+    {
+        $checkExist = Canteen::select("*")->where('date', '=', Carbon::today()->toDateString())->where('npk', '=', $request->npk)->get();
+        $this->validate($request, [
+            'npk' => 'required',
+            'name' => 'required',
+            'date' => 'required',
+            'canteen_no' => 'required',
+        ]);
+
+        if (count($checkExist) < 1) {
+            Canteen::firstOrCreate([
+                'canteen_no' => $request->canteen_no,
+                'npk' => $request->npk,
+                'name' => $request->name,
+                'date' => $request->date,
+            ]);
+            Alert::success('Scan Successfully!', 'Employee ' . $request->npk . ' - ' . $request->name . ' successfully scanned!');
+        } else {
+            Alert::error('Alert!', 'Employee ' . $request->npk . ' - ' . $request->name . ' already scanned!');
+        }
+
+        return redirect('/canteen/index');
+    }
+
+    public function canteen2(Request $request)
+    {
+        $checkExist = Canteen::select("*")->where('date', '=', Carbon::today()->toDateString())->where('npk', '=', $request->npk)->get();
+        $this->validate($request, [
+            'npk' => 'required',
+            'name' => 'required',
+            'date' => 'required',
+            'canteen_no' => 'required',
+        ]);
+
+        if (count($checkExist) < 1) {
+            Canteen::firstOrCreate([
+                'canteen_no' => $request->canteen_no,
+                'npk' => $request->npk,
+                'name' => $request->name,
+                'date' => $request->date,
+            ]);
+            Alert::success('Scan Successfully!', 'Employee ' . $request->npk . ' - ' . $request->name . ' successfully scanned!');
+        } else {
+            Alert::error('Alert!', 'Employee ' . $request->npk . ' - ' . $request->name . ' already scanned!');
+        }
+
+        return redirect('/canteen/index');
+    }
+    
+    public function export_excel()
+	{
+		return Excel::download(new CanteensExport, 'All Canteen Data.xlsx');
+	}
 }
