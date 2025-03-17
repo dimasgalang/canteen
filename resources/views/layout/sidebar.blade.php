@@ -19,7 +19,7 @@
             <span>Dashboard</span></a>
     </li>
 
-    @if($roles[0]->rolename == 'Admin')
+    @if($roleusers[0]->rolename == 'Admin')
     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUser"
             aria-expanded="true" aria-controls="collapseUser">
@@ -69,13 +69,13 @@
             <span>Kantin</span>
         </a>
         <div id="collapseCanteen" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+            @if($roleusers[0]->rolename == 'HR' || $roleusers[0]->rolename == 'Admin')
             <div class="bg-white py-2 collapse-inner rounded">
-                @if($roles[0]->rolename == 'HR' || $roles[0]->rolename == 'Admin')
                 <a class="collapse-item" href="{{ route('canteen.index') }}">Data Kantin</a>
                 <a class="collapse-item" href="{{ route('canteen.scancanteen1') }}">Scan Canteen 1</a>
                 <a class="collapse-item" href="{{ route('canteen.scancanteen2') }}">Scan Canteen 2</a>
-                @endif
             </div>
+            @endif
         </div>
     </li>
 

@@ -8,7 +8,6 @@
 @include('layout.sidebar')
     <!-- Content Wrapper -->
     <div id="content-wrapper" class="d-flex flex-column">
-
         <!-- Main Content -->
         <div id="content">
             @include('layout.navbar')
@@ -74,7 +73,7 @@
                                         <td>{{ $role->name }}</td>
                                         <td>{{ $role->guard_name }}</td>
                                         <td class="text-center">
-                                            <a class="btn btn-danger btn-circle btn-sm btn-delete-record" data-delete-link="delete/{{ $role->id }}" data-delete-name="{{ $role->role_name }}" data-toggle="modal" data-target="#deleteModal">
+                                            <a class="btn btn-danger btn-circle btn-sm btn-delete-record" data-delete-link="delete/{{ $role->id }}" data-delete-name="{{ $role->name }}" data-toggle="modal" data-target="#deleteModal">
                                                 <i class="fas fa-trash"></i>
                                             </a>
                                         </td>

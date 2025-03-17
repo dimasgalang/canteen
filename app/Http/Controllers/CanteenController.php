@@ -154,8 +154,9 @@ class CanteenController extends Controller
         return redirect('/canteen/index');
     }
 
-    public function export_excel()
+    public function export_excel(Request $request)
     {
-        return Excel::download(new CanteensExport, 'All Canteen Data.xlsx');
+        // dd($request->fromdate);
+        return Excel::download(new CanteensExport($request->fromdate, $request->todate, $request->canteen_no), 'All Canteen Data.xlsx');
     }
 }

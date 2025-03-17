@@ -22,15 +22,29 @@ use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\Font;
 
-class CanteensExport implements FromCollection, WithHeadings, WithStrictNullComparison, WithEvents, WithMapping, WithStyles
+class CanteensExport implements WithHeadings, WithStrictNullComparison, WithEvents, WithMapping, WithStyles, FromCollection
 {
     /**
-    * @return \Illuminate\Support\Collection
-    */
+     * @return \Illuminate\Support\Collection
+     */
+
+    use Exportable;
+    protected $fromdate;
+    protected $todate;
+    protected $canteen_no;
+
+    function __construct($fromdate, $todate, $canteen_no)
+    {
+        $this->fromdate = $fromdate;
+        $this->todate = $todate;
+        $this->canteen_no = $canteen_no;
+    }
+
     public function collection()
     {
-        return Canteen::select('*')->where('date', '=', Carbon::today()->toDateString())->get();
+        return Canteen::select('*')->where('date', '>=', $this->fromdate)->where('date', '<=', $this->todate)->where('canteen_no', '=', $this->canteen_no)->get();
     }
+
     public function headings(): array
     {
         return [
@@ -45,12 +59,12 @@ class CanteensExport implements FromCollection, WithHeadings, WithStrictNullComp
     public function map($canteens): array
     {
         return [
-           $canteens->row_num,
-           $canteens->npk,
-           $canteens->name,
-           $canteens->canteen_no,
-           $canteens->date,
-           $canteens->created_at,
+            $canteens->row_num,
+            $canteens->npk,
+            $canteens->name,
+            $canteens->canteen_no,
+            $canteens->date,
+            $canteens->created_at,
         ];
     }
 
@@ -84,19 +98,19 @@ class CanteensExport implements FromCollection, WithHeadings, WithStrictNullComp
                 'quotePrefix'    => true
             ]
         );
-        
     }
 
-    public function registerEvents():array {
+    public function registerEvents(): array
+    {
         return [
             AfterSheet::class => function (AfterSheet $event) {
                 // $event->sheet->getDefaultRowDimension()->setRowHeight(100);
                 // $event->sheet->getRowDimension(1)->setRowHeight(10);
                 // $event->sheet->getColumnDimension('L')->setWidth(100);
                 $workSheet = $event->sheet->getDelegate();
-                
-                $this->collection()->each(function($orderMaster,$index) use($workSheet) {
-                    $index+=2;
+
+                $this->collection()->each(function ($orderMaster, $index) use ($workSheet) {
+                    $index += 2;
                     $workSheet->getColumnDimension('A')->setWidth(8);
                     $workSheet->getColumnDimension('B')->setWidth(10);
                     $workSheet->getColumnDimension('C')->setWidth(20);

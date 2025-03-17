@@ -14,11 +14,11 @@
             @include('layout.navbar')
             <!-- Begin Page Content -->
             <div class="container-fluid">
+                <form method="get" action="{{ route('canteen.export') }}" enctype="multipart/form-data">
 
                 <!-- Page Heading -->
                 <div class="d-sm-flex align-items-center justify-content-between mb-4">
                     <h1 class="h3 mb-0 text-gray-800">Canteen List</h1>
-                    <a href="{{ route('canteen.export') }}" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i class="fas fa-plus fa-sm text-white-50"></i> Export Excel</a>
                 </div>
                 <div class="row">
                     <div class="col-lg-12">
@@ -31,15 +31,16 @@
                                     <div class="col-xl-4 col-md-6 mb-4">
                                         <div>
                                             <label>From Date :</label>
-                                            <input class="date form-control" type="date" id="fromdate" value="">
+                                            <input class="date form-control" type="date" id="fromdate" name="fromdate" value="">
                                         </div>
                                         <br>
-                                        <button id='filter-data' type="submit" class="btn btn-primary">Filter</button>
+                                        <button id='filter-data' type="button" class="btn btn-primary">Filter</button>
+                                        <button id='export' type="submit" class="btn btn-success">Export To Excel</button>
                                     </div>
                                     <div class="col-xl-4 col-md-6 mb-4">
                                         <div>
                                             <label>To Date :</label>
-                                            <input class="date form-control" type="date" id="todate" value="">
+                                            <input class="date form-control" type="date" id="todate" name="todate" value="">
                                         </div>
                                     </div>
                                     <div class="col-xl-4 col-md-6 mb-4">
@@ -82,6 +83,7 @@
                         </div>
                     </div>
                 </div>
+            </form>
 
             </div>
             <!-- /.container-fluid -->

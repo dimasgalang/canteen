@@ -81,7 +81,7 @@
                                             <a href="{{ route('user.assign', ['id' => $user->id])  }}" class="btn btn-primary btn-circle btn-sm">
                                                 <i class="fas fa-key"></i>
                                             </a>
-                                            <a href="{{ route('user.profile', ['id' => $user->id]) }}" class="btn btn-primary btn-circle btn-sm">
+                                            <a href="{{ route('user.detail', ['id' => $user->id]) }}" class="btn btn-primary btn-circle btn-sm">
                                                 <i class="fas fa-edit"></i>
                                             </a>
                                             <a class="btn btn-danger btn-circle btn-sm btn-delete-user" data-delete-link="{{ route('user.delete', ['id' => $user->id]) }}" data-user-name="{{ $user->name }}" data-toggle="modal" data-target="#deleteModal">
