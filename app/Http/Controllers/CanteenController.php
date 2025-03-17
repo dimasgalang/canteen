@@ -96,9 +96,9 @@ class CanteenController extends Controller
                 'name' => $request->name,
                 'date' => $request->date,
             ]);
-            Alert::success('Scan Successfully!', 'Employee ' . $request->npk . ' - ' . $request->name . ' successfully scanned!');
+            Alert::success('Scan Successfully!', 'Employee ' . $request->npk . ' - ' . $request->name . ' successfully scanned!')->autoClose(1000);
         } else {
-            Alert::error('Alert!', 'Employee ' . $request->npk . ' - ' . $request->name . ' already scanned!');
+            Alert::error('Alert!', 'Employee ' . $request->npk . ' - ' . $request->name . ' already scanned!')->autoClose(1000);
         }
 
         return Redirect::back();
@@ -121,9 +121,9 @@ class CanteenController extends Controller
                 'name' => $request->name,
                 'date' => $request->date,
             ]);
-            Alert::success('Scan Successfully!', 'Employee ' . $request->npk . ' - ' . $request->name . ' successfully scanned!');
+            Alert::success('Scan Successfully!', 'Employee ' . $request->npk . ' - ' . $request->name . ' successfully scanned!')->autoClose(1000);
         } else {
-            Alert::error('Alert!', 'Employee ' . $request->npk . ' - ' . $request->name . ' already scanned!');
+            Alert::error('Alert!', 'Employee ' . $request->npk . ' - ' . $request->name . ' already scanned!')->autoClose(1000);
         }
 
         return redirect('/canteen/index');
@@ -146,9 +146,9 @@ class CanteenController extends Controller
                 'name' => $request->name,
                 'date' => $request->date,
             ]);
-            Alert::success('Scan Successfully!', 'Employee ' . $request->npk . ' - ' . $request->name . ' successfully scanned!');
+            Alert::success('Scan Successfully!', 'Employee ' . $request->npk . ' - ' . $request->name . ' successfully scanned!')->autoClose(1000);
         } else {
-            Alert::error('Alert!', 'Employee ' . $request->npk . ' - ' . $request->name . ' already scanned!');
+            Alert::error('Alert!', 'Employee ' . $request->npk . ' - ' . $request->name . ' already scanned!')->autoClose(1000);
         }
 
         return redirect('/canteen/index');

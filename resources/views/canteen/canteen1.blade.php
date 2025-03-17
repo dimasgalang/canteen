@@ -16,16 +16,12 @@
             <div class="container-fluid">
 
                 <!-- Page Heading -->
-                <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                    <h1 class="h3 mb-0 text-gray-800">Canteen 1</h1>
-                </div>
-                
                 <div class="row">
                     
                     <div class="col-lg-4">
                         <div class="card shadow mb-4">
                             <div class="card-header py-3 d-sm-flex align-items-center justify-content-between mb-4">
-                                <h6 class="m-0 font-weight-bold text-primary">Scan Here</h6>
+                                <h6 class="m-0 font-weight-bold text-primary">Scan Canteen 1</h6>
                             </div>
                             <div class="card-body">
                                 <div id="reader"></div>
@@ -35,7 +31,7 @@
                     <div class="col-lg-8">
                         <div class="card shadow mb-4">
                             <div class="card-header py-3 d-sm-flex align-items-center justify-content-between mb-4">
-                                <h6 class="m-0 font-weight-bold text-primary">Canteen Data</h6>
+                                <h6 class="m-0 font-weight-bold text-primary">Canteen 1 Data</h6>
                             </div>
                             <div class="card-body">
                                 <input type="hidden" name="date" id="date" value="{{ date('Y-m-d') }}">
