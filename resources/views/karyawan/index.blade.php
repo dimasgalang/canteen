@@ -2,6 +2,7 @@
 <html lang="en">
 @include('layout.header')
 <body id="page-top">
+@include('sweetalert::alert')
 <!-- Page Wrapper -->
 <div id="wrapper">
 @include('layout.sidebar')
@@ -18,7 +19,7 @@
                 <div class="d-sm-flex align-items-center justify-content-between mb-4">
                     <h1 class="h3 mb-0 text-gray-800">Daftar Karyawan</h1>
                     <div>
-                    <a href="{{ route('scanner.batch') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+                    <a href="{{ route('karyawan.batch') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
                         class="fas fa-plus fa-sm text-white-50"></i> Create Batch QR Code</a>
                     </div>
                 </div>
@@ -77,6 +78,9 @@
                                         <td>{{ $employee->BARCODE }}</td>
                                         <!-- <td align="center"><img src="{{ asset('/foto-npk/' . $employee->NPK . '.jpg') }}" style="width: 100px;" onerror="this.style.display='none'; this.style.width='0px'"></td> -->
                                         <td align="center">
+                                            <a href ="{{ route('karyawan.generateqr', ['id' => $employee->NPK]) }}" class="btn btn-primary btn-circle btn-sm">
+                                                <i class="fas fa-qrcode"></i>
+                                            </a>
                                             <a id="show-user" class="btn btn-primary btn-circle btn-sm btn-show-detail" data-url="{{ route('karyawan.detail', $employee->NPK) }}" data-show-link="{{ $employee->NPK }}" data-show-title="{{ $employee->NPK . ' - ' . $employee->NAMA_KARYAWAN }}" data-show-image="{{ asset('/foto-npk/' . $employee->NPK . '.jpg') }}">
                                                 <i class="fas fa-info"></i>
                                             </a>

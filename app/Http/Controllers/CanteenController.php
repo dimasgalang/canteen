@@ -32,16 +32,25 @@ class CanteenController extends Controller
         return view('canteen.canteen2', compact('canteens'));
     }
 
-    public function showcanteen()
+    public function showcanteen(Request $request)
     {
-        $canteens = Canteen::orderBy('created_at', 'desc')->where('date', '=', Carbon::today()->toDateString())->get();
-        return DataTables::of($canteens)
-            ->addIndexColumn()
-            ->addColumn('created_at_formated', function ($row) {
-                return date('d-m-Y h:m:s', strtotime($row->created_at));
-            })
-            ->rawColumns(['created_at_formated'])
-            ->make(true);
+        if ($request->ajax()) {
+            $canteens = Canteen::orderBy('created_at', 'desc');
+            return DataTables::of($canteens)
+                ->addIndexColumn()
+                ->addColumn('created_at_formated', function ($row) {
+                    return date('d-m-Y h:i:s', strtotime($row->created_at));
+                })
+                ->rawColumns(['created_at_formated'])
+                ->filter(function ($instance) use ($request) {
+                    if ($request->filled('fromdate') && $request->filled('todate')) {
+                        $instance
+                            ->where('date', '>=', $request->get('fromdate'))
+                            ->where('date', '<=', $request->get('todate'))
+                            ->where('canteen_no', '=', $request->get('canteen_no'));
+                    }
+                })->make(true);
+        };
     }
 
 
@@ -51,7 +60,7 @@ class CanteenController extends Controller
         return DataTables::of($canteens)
             ->addIndexColumn()
             ->addColumn('created_at_formated', function ($row) {
-                return date('d-m-Y h:m:s', strtotime($row->created_at));
+                return date('d-m-Y h:i:s', strtotime($row->created_at));
             })
             ->rawColumns(['created_at_formated'])
             ->make(true);
@@ -64,7 +73,7 @@ class CanteenController extends Controller
         return DataTables::of($canteens)
             ->addIndexColumn()
             ->addColumn('created_at_formated', function ($row) {
-                return date('d-m-Y h:m:s', strtotime($row->created_at));
+                return date('d-m-Y h:i:s', strtotime($row->created_at));
             })
             ->rawColumns(['created_at_formated'])
             ->make(true);
@@ -144,9 +153,9 @@ class CanteenController extends Controller
 
         return redirect('/canteen/index');
     }
-    
+
     public function export_excel()
-	{
-		return Excel::download(new CanteensExport, 'All Canteen Data.xlsx');
-	}
+    {
+        return Excel::download(new CanteensExport, 'All Canteen Data.xlsx');
+    }
 }

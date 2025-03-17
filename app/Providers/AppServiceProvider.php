@@ -23,8 +23,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        config(['app.locale' => 'id']);
-	    Carbon::setLocale('id');
         view()->composer('*', function ($view) {
             if (Auth::check()) {
                 $roles = User::select('users.name', 'users.email', 'users.id', 'model_has_roles.*', 'roles.name as rolename')

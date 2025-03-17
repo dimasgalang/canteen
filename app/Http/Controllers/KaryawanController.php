@@ -11,16 +11,18 @@ use SimpleSoftwareIO\QrCode\Facades\QrCode as FacadesQrCode;
 
 class KaryawanController extends Controller
 {
-    public function index() {
+    public function index()
+    {
         $employees = DB::connection('sqlsrv')->table('BIODATA')->select('BIODATA.*', 'DEPT.DEPARTEMENT')->leftJoin('DEPT', 'DEPT.ID_DEPT', '=', 'BIODATA.ID_DEPT')->orderBy('DEPARTEMENT', 'ASC')->get();
         return view('karyawan.index', compact('employees'));
     }
 
-    public function show($id) {
+    public function show($id)
+    {
         $employees = DB::connection('sqlsrv')->table('BIODATA')->select('PKWT.*', 'DEPT.DEPARTEMENT', 'BIODATA.ID_DEPT')->leftJoin('DEPT', 'DEPT.ID_DEPT', '=', 'BIODATA.ID_DEPT')->leftJoin('PKWT', 'BIODATA.NPK', '=', 'PKWT.NPK')->where('BIODATA.NPK', '=', $id)->get();
         return response()->json($employees);
     }
-    
+
 
     public function batch()
     {
@@ -43,6 +45,28 @@ class KaryawanController extends Controller
             ]);
         }
         Alert::success('Batch Successfully!', 'QR Code successfully generated!');
+        return redirect('/karyawan/index');
+    }
+
+    public function generateqr($id)
+    {
+        $employees = DB::connection('sqlsrv')->table('BIODATA')->select('PKWT.*', 'DEPT.DEPARTEMENT', 'BIODATA.*')->leftJoin('DEPT', 'DEPT.ID_DEPT', '=', 'BIODATA.ID_DEPT')->leftJoin('PKWT', 'BIODATA.NPK', '=', 'PKWT.NPK')->where('BIODATA.NPK', '=', $id)->get();
+
+        $path = storage_path('public/qr/');
+        // $qr_data = $employee->NPK;
+        $qr_data = "canteen?npk=" . $employees[0]->NPK . "&name=" . $employees[0]->NAMA_KARYAWAN;
+        $qr = FacadesQrCode::format('png')->generate($qr_data);
+        $qrImageName = $employees[0]->NPK . "-" . $employees[0]->NAMA_KARYAWAN . '.png';
+
+        Storage::put('public/qr/' . $qrImageName, $qr);
+
+        QRFiles::firstOrCreate([
+            'npk' => $employees[0]->NPK,
+            'qr_data' => $qr_data,
+            'qr_name' => $qrImageName,
+            'qr_path' => $path
+        ]);
+        Alert::success('Generate QR Successfully!', 'QR Code successfully generated!');
         return redirect('/karyawan/index');
     }
 }

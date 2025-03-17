@@ -83,6 +83,8 @@ Route::group(['middleware' => 'auth'], function () {
     //Karyawan
     Route::get('/karyawan/index', [KaryawanController::class, 'index'])->name('karyawan.index');
     Route::get('/karyawan/detail/{id}', [KaryawanController::class, 'show'])->name('karyawan.detail');
+    Route::get('/karyawan/generateqr/{id}', [KaryawanController::class, 'generateqr'])->name('karyawan.generateqr');
+    Route::get('/karyawan/batch', [KaryawanController::class, 'batch'])->name('karyawan.batch');
 
     //Export
     Route::get('/canteen/export', [CanteenController::class, 'export_excel'])->name('canteen.export');

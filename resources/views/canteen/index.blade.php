@@ -20,8 +20,43 @@
                     <h1 class="h3 mb-0 text-gray-800">Canteen List</h1>
                     <a href="{{ route('canteen.export') }}" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i class="fas fa-plus fa-sm text-white-50"></i> Export Excel</a>
                 </div>
-                
                 <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3 d-sm-flex align-items-center justify-content-between mb-4">
+                                <h6 class="m-0 font-weight-bold text-primary">Filter</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-xl-4 col-md-6 mb-4">
+                                        <div>
+                                            <label>From Date :</label>
+                                            <input class="date form-control" type="date" id="fromdate" value="">
+                                        </div>
+                                        <br>
+                                        <button id='filter-data' type="submit" class="btn btn-primary">Filter</button>
+                                    </div>
+                                    <div class="col-xl-4 col-md-6 mb-4">
+                                        <div>
+                                            <label>To Date :</label>
+                                            <input class="date form-control" type="date" id="todate" value="">
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-4 col-md-6 mb-4">
+                                        <div>
+                                            <label>Canteen :</label>
+                                            <select name="canteen_no" id="canteen_no" class="form-control">
+                                                <option disabled selected hidden>Select Canteen</option>
+                                                <option value="1">Canteen 1</option>
+                                                <option value="2">Canteen 2</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
                     <div class="col-lg-12">
                         <div class="card shadow mb-4">
                             <div class="card-header py-3 d-sm-flex align-items-center justify-content-between mb-4">
@@ -81,23 +116,44 @@
 
 <!-- Page level custom scripts -->
 <script src="{{asset('js/demo/datatables-demo.js')}}"></script>
-<script>
-    var tableCanteen = $('#dataTable').DataTable({
-    destroy: true,
-    responsive: true,
-    serverside:true,
-    ajax: '{{ route("canteen.showcanteen") }}',
-    columns: [
-            { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
-            { data: 'npk', name: 'npk', orderable: false },
-            { data: 'name', name: 'name', orderable: false },
-            { data: 'canteen_no', name: 'canteen_no', orderable: false },
-            { data: 'created_at_formated', name: 'created_at_formated', orderable: false },
-        ],
+<script type="text/javascript">
+    $( document ).ready(function() {
+        var date = new Date();
+        var firstDay = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2);
+        var lastDay = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + (date.getDate() + 1)).slice(-2);
+        document.getElementById("fromdate").value = firstDay;
+        document.getElementById("todate").value = lastDay;
     });
-    setInterval( function () {
-        tableCanteen.ajax.reload();
-    }, 1000);
+
+    var jsonCanteen = '{{ route("canteen.showcanteen") }}';
+    $.get(jsonCanteen, function (data) {
+        var tableCanteen = $('#dataTable').DataTable({
+        destroy: true,
+        processing: true,
+        serverSide: true,
+        responsive: true,
+        dom: 'rtip',
+        ajax: {
+            url: jsonCanteen,
+            data: function (d) {
+                    d.fromdate = document.getElementById('fromdate').value,
+                    d.todate = document.getElementById('todate').value,
+                    d.canteen_no = document.getElementById('canteen_no').value
+                }
+            },
+        columns: [
+                { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
+                { data: 'npk', name: 'npk', orderable: false },
+                { data: 'name', name: 'name', orderable: false },
+                { data: 'canteen_no', name: 'canteen_no', orderable: false },
+                { data: 'created_at_formated', name: 'created_at_formated', orderable: false },
+            ],
+        });
+        $('#filter-data').click(function(){
+            tableCanteen.draw();
+            // console.log("Clicked");
+        });
+    });
 </script>
 
 </html>

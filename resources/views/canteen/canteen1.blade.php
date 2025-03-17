@@ -17,7 +17,7 @@
 
                 <!-- Page Heading -->
                 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                    <h1 class="h3 mb-0 text-gray-800">Canteen List</h1>
+                    <h1 class="h3 mb-0 text-gray-800">Canteen 1</h1>
                 </div>
                 
                 <div class="row">
@@ -118,6 +118,10 @@
                 width: 300,
                 height: 300,
             },
+            supportedScanTypes: [
+                // Html5QrcodeScanType.SCAN_TYPE_FILE, 
+                Html5QrcodeScanType.SCAN_TYPE_CAMERA
+            ],
         }
     );
 
