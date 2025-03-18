@@ -90,7 +90,6 @@
     var tableCanteen = $('#dataTable').DataTable({
     destroy: true,
     responsive: true,
-    serverside:true,
     ajax: '{{ route("canteen.showcanteen2") }}',
     columns: [
             { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
@@ -128,7 +127,6 @@
         // alert(decoder);
         window.location.href = decoder;
         html5QRCodeScanner.clear();
-        window.location.href = decoder;
     }
     html5QRCodeScanner.render(onScanSuccess);
 </script>

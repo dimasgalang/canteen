@@ -81,7 +81,10 @@ class CanteenController extends Controller
 
     public function canteen(Request $request)
     {
-        $checkExist = Canteen::select("*")->where('date', '=', Carbon::today()->toDateString())->where('npk', '=', $request->npk)->get();
+        $checkExist = Canteen::select("*")->where('created_at', '>=', Carbon::now()->subHours(3)->toDateTimeString())->where('npk', '=', $request->npk)->get();
+        // dd(Carbon::now()->subHours(3)->toDateTimeString());
+        // dd($checkExist);
+        // $checkExist = Canteen::select("*")->where('date', '=', Carbon::today()->toDateString())->where('npk', '=', $request->npk)->get();
         $this->validate($request, [
             'npk' => 'required',
             'name' => 'required',
@@ -89,19 +92,25 @@ class CanteenController extends Controller
             'canteen_no' => 'required',
         ]);
 
-        if (count($checkExist) < 1) {
-            Canteen::firstOrCreate([
+        if (count($checkExist) == 0) {
+            Canteen::create([
                 'canteen_no' => $request->canteen_no,
                 'npk' => $request->npk,
                 'name' => $request->name,
                 'date' => $request->date,
             ]);
-            Alert::success('Scan Successfully!', 'Employee ' . $request->npk . ' - ' . $request->name . ' successfully scanned!')->autoClose(1000);
+            Alert::success('Scan Successfully!', 'Employee ' . $request->npk . ' - ' . $request->name . ' successfully scanned!')->autoClose(3000);
         } else {
-            Alert::error('Alert!', 'Employee ' . $request->npk . ' - ' . $request->name . ' already scanned!')->autoClose(1000);
+            Alert::error('Alert!', 'Employee ' . $request->npk . ' - ' . $request->name . ' already scanned!')->autoClose(3000);
         }
 
-        return Redirect::back();
+        if ($request->canteen_no == 1) {
+            return redirect('/canteen/scancanteen1');
+        } else {
+            return redirect('/canteen/scancanteen2');
+        }
+
+        // return Redirect::back();
     }
 
     public function canteen1(Request $request)
@@ -121,9 +130,9 @@ class CanteenController extends Controller
                 'name' => $request->name,
                 'date' => $request->date,
             ]);
-            Alert::success('Scan Successfully!', 'Employee ' . $request->npk . ' - ' . $request->name . ' successfully scanned!')->autoClose(1000);
+            Alert::success('Scan Successfully!', 'Employee ' . $request->npk . ' - ' . $request->name . ' successfully scanned!')->autoClose(3000);
         } else {
-            Alert::error('Alert!', 'Employee ' . $request->npk . ' - ' . $request->name . ' already scanned!')->autoClose(1000);
+            Alert::error('Alert!', 'Employee ' . $request->npk . ' - ' . $request->name . ' already scanned!')->autoClose(3000);
         }
 
         return redirect('/canteen/index');
@@ -146,9 +155,9 @@ class CanteenController extends Controller
                 'name' => $request->name,
                 'date' => $request->date,
             ]);
-            Alert::success('Scan Successfully!', 'Employee ' . $request->npk . ' - ' . $request->name . ' successfully scanned!')->autoClose(1000);
+            Alert::success('Scan Successfully!', 'Employee ' . $request->npk . ' - ' . $request->name . ' successfully scanned!')->autoClose(3000);
         } else {
-            Alert::error('Alert!', 'Employee ' . $request->npk . ' - ' . $request->name . ' already scanned!')->autoClose(1000);
+            Alert::error('Alert!', 'Employee ' . $request->npk . ' - ' . $request->name . ' already scanned!')->autoClose(3000);
         }
 
         return redirect('/canteen/index');
