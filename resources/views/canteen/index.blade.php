@@ -155,9 +155,9 @@
             tableCanteen.draw();
             // console.log("Clicked");
         });
-        setInterval( function () {
-            tableCanteen.ajax.reload();
-        }, 1000);
+        // setInterval( function () {
+        //     tableCanteen.ajax.reload();
+        // }, 1000);
     });
 </script>
 

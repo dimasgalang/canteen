@@ -105,7 +105,7 @@
                     <div class="card-body">
                         <div class="text-center">
                             <img class="img-fluid px-3 px-sm-4 mt-3 mb-4" width="100%"
-                                src="{{asset('img/e-signature.jpg')}}" alt="...">
+                                src="{{asset('storage/images/ilustration.png')}}" alt="...">
                         </div>
                     </div>
                 </div>

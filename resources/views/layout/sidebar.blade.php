@@ -33,6 +33,18 @@
             </div>
         </div>
     </li>
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTools"
+            aria-expanded="true" aria-controls="collapseTools">
+            <i class="fas fa-fw fa-cog"></i>
+            <span>Tools</span>
+        </a>
+        <div id="collapseTools" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <a class="collapse-item" href="chrome://flags/#unsafely-treat-insecure-origin-as-secure" target="_blank">Enable Camera</a>
+            </div>
+        </div>
+    </li>
     @endif
     
     <li class="nav-item">
