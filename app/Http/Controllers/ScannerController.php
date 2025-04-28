@@ -95,8 +95,9 @@ class ScannerController extends Controller
             $npk = $exploding[0];
             $name = $exploding[1];
             $dept = $exploding[2];
+            // dd($dept);
 
-            $checkExist = Canteen::select("*")->where('created_at', '<=', Carbon::now()->subHours(0)->toDateTimeString())->where('npk', '=', '$npk')->get();
+            $checkExist = Canteen::select("*")->where('created_at', '<=', Carbon::now()->subHours(0)->toDateTimeString())->where('npk', '=', $npk)->get();
 
             if (count($checkExist) < 1) {
                 Canteen::firstOrCreate([
@@ -106,7 +107,7 @@ class ScannerController extends Controller
                     'dept' => $dept,
                     'date' => Carbon::now()
                 ]);
-                Alert::success('Scan Successfully!', 'Employee ' . $request->npk . ' - ' . $request->name . ' successfully scanned!')->autoClose(1000);
+                Alert::success('Scan Successfully!', 'Employee ' . $npk . ' - ' . $name . ' successfully scanned!')->autoClose(1000);
             } else {
                 Alert::error('Alert!', 'Employee ' . $npk . ' - ' . $name . ' already scanned!')->autoClose(1000);
             }
@@ -125,7 +126,7 @@ class ScannerController extends Controller
             $name = $exploding[1];
             $dept = $exploding[2];
 
-            $checkExist = Canteen::select("*")->where('created_at', '<=', Carbon::now()->subHours(0)->toDateTimeString())->where('npk', '=', '$npk')->get();
+            $checkExist = Canteen::select("*")->where('created_at', '<=', Carbon::now()->subHours(0)->toDateTimeString())->where('npk', '=', $npk)->get();
 
             if (count($checkExist) < 1) {
                 Canteen::firstOrCreate([
@@ -135,7 +136,7 @@ class ScannerController extends Controller
                     'dept' => $dept,
                     'date' => Carbon::now()
                 ]);
-                Alert::success('Scan Successfully!', 'Employee ' . $request->npk . ' - ' . $request->name . ' successfully scanned!')->autoClose(1000);
+                Alert::success('Scan Successfully!', 'Employee ' . $npk . ' - ' . $name . ' successfully scanned!')->autoClose(1000);
             } else {
                 Alert::error('Alert!', 'Employee ' . $npk . ' - ' . $name . ' already scanned!')->autoClose(1000);
             }

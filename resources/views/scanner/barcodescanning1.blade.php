@@ -55,7 +55,7 @@
                         @endif
                         <div>
                             <label>Barcode :</label>
-                            <input class="form-control" type="text" id="barcode" name="barcode">
+                            <input class="form-control" type="text" id="barcode" name="barcode" autocomplete="off">
                         </div>
                         <br>
                     </div>
@@ -157,7 +157,24 @@
         $('input[name="barcode"]').blur(function(){
             $('input[name="barcode"]').focus();
         });
-        document.getElementById("barcode").addEventListener("input", onScanSuccess);
+        
+        var typingTimer;
+        var doneTypingInterval = 500;
+        var $input = $('#barcode');
+
+        $input.on('keyup', function () {
+            clearTimeout(typingTimer);
+            typingTimer = setTimeout(doneTyping, doneTypingInterval);
+        });
+
+        $input.on('keydown', function () {
+            clearTimeout(typingTimer);
+        });
+
+        function doneTyping () {
+            onScanSuccess();
+        }
+        // document.getElementById("barcode").addEventListener("input", onScanSuccess);
     });
     function onScanSuccess() {
         var decoder = document.getElementById("barcode").value;
