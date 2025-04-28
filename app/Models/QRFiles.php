@@ -11,7 +11,6 @@ class QRFiles extends Model
     public $table = "qrcode";
     protected $fillable = [
         'npk',
-        'canteen_no',
         'qr_data',
         'qr_name',
         'qr_path',

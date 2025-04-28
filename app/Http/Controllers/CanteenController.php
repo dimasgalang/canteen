@@ -113,59 +113,9 @@ class CanteenController extends Controller
         // return Redirect::back();
     }
 
-    public function canteen1(Request $request)
-    {
-        $checkExist = Canteen::select("*")->where('date', '=', Carbon::today()->toDateString())->where('npk', '=', $request->npk)->get();
-        $this->validate($request, [
-            'npk' => 'required',
-            'name' => 'required',
-            'date' => 'required',
-            'canteen_no' => 'required',
-        ]);
-
-        if (count($checkExist) < 1) {
-            Canteen::firstOrCreate([
-                'canteen_no' => $request->canteen_no,
-                'npk' => $request->npk,
-                'name' => $request->name,
-                'date' => $request->date,
-            ]);
-            Alert::success('Scan Successfully!', 'Employee ' . $request->npk . ' - ' . $request->name . ' successfully scanned!')->autoClose(3000);
-        } else {
-            Alert::error('Alert!', 'Employee ' . $request->npk . ' - ' . $request->name . ' already scanned!')->autoClose(3000);
-        }
-
-        return redirect('/canteen/index');
-    }
-
-    public function canteen2(Request $request)
-    {
-        $checkExist = Canteen::select("*")->where('date', '=', Carbon::today()->toDateString())->where('npk', '=', $request->npk)->get();
-        $this->validate($request, [
-            'npk' => 'required',
-            'name' => 'required',
-            'date' => 'required',
-            'canteen_no' => 'required',
-        ]);
-
-        if (count($checkExist) < 1) {
-            Canteen::firstOrCreate([
-                'canteen_no' => $request->canteen_no,
-                'npk' => $request->npk,
-                'name' => $request->name,
-                'date' => $request->date,
-            ]);
-            Alert::success('Scan Successfully!', 'Employee ' . $request->npk . ' - ' . $request->name . ' successfully scanned!')->autoClose(3000);
-        } else {
-            Alert::error('Alert!', 'Employee ' . $request->npk . ' - ' . $request->name . ' already scanned!')->autoClose(3000);
-        }
-
-        return redirect('/canteen/index');
-    }
-
     public function export_excel(Request $request)
     {
         // dd($request->fromdate);
-        return Excel::download(new CanteensExport($request->fromdate, $request->todate, $request->canteen_no), 'All Canteen Data.xlsx');
+        return Excel::download(new CanteensExport($request->fromdate, $request->todate, $request->canteen_no), 'Canteen Data_' . $request->fromdate . '_' . $request->todate . '_Kantin ' . $request->canteen_no . '.xlsx');
     }
 }

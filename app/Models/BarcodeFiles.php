@@ -5,15 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Canteen extends Model
+class BarcodeFiles extends Model
 {
     use HasFactory;
-    public $table = "canteen";
+    public $table = "barcode";
     protected $fillable = [
-        'canteen_no',
         'npk',
-        'name',
-        'dept',
-        'date',
+        'barcode_data',
+        'barcode_name',
+        'barcode_path',
     ];
 }

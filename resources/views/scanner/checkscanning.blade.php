@@ -18,10 +18,6 @@
                 <!-- Page Heading -->
                 <div class="d-sm-flex align-items-center justify-content-between mb-4">
                     <h1 class="h3 mb-0 text-gray-800">QR Scanner</h1>
-                    <div>
-                    <a href="{{ route('scanner.create') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                        class="fas fa-plus fa-sm text-white-50"></i> Create QR</a>
-                    </div>
                 </div>
                 
                 <!-- DataTales Example -->
@@ -57,7 +53,7 @@
                             <strong>{{ $message }}</strong>
                         </div>
                         @endif
-                        <div id="reader" style="width: 500px;"></div>
+                        <center><div id="reader" style="width: 500px;"></div></center>
                     </div>
                 </div>
                 <!-- Content Row -->
@@ -91,6 +87,7 @@
 <!-- Page level plugins -->
 <script src="{{asset('vendor/datatables/jquery.dataTables.min.js')}}"></script>
 <script src="{{asset('vendor/datatables/dataTables.bootstrap4.min.js')}}"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <!-- Page level custom scripts -->
 <script src="{{asset('js/demo/datatables-demo.js')}}"></script>
@@ -110,17 +107,18 @@
                 width: 300,
                 height: 300,
             },
+            supportedScanTypes: [
+                Html5QrcodeScanType.SCAN_TYPE_FILE, 
+                Html5QrcodeScanType.SCAN_TYPE_CAMERA
+            ],
         }
     );
 
     function onScanSuccess(decodedText, decodedResult) {
         // redirect ke link hasil scan
-        // var decoder = "canteen?npk=" + decodedResult.decodedText + "&canteen_no=1";
-        var decoder = decodedResult.decodedText + "&canteen_no=1";
+        var decoder = decodedResult.decodedText;
         // alert(decoder);
-        window.location.href = decoder;
-        html5QRCodeScanner.clear();
-        window.location.href = decoder;
+        Swal.fire(decoder);
     }
     html5QRCodeScanner.render(onScanSuccess);
 </script>

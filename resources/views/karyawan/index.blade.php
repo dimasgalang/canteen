@@ -19,8 +19,12 @@
                 <div class="d-sm-flex align-items-center justify-content-between mb-4">
                     <h1 class="h3 mb-0 text-gray-800">Daftar Karyawan</h1>
                     <div>
-                    <a href="{{ route('karyawan.batch') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                        class="fas fa-plus fa-sm text-white-50"></i> Create Batch QR Code</a>
+                    <form method="GET" action="{{ route('karyawan.batchQR') }}" >
+                        <button id="submitqr" type="submit" class="btn btn-sm btn-primary shadow-s">Generate Batch QR</button>
+                    </form>
+                    <form method="GET" action="{{ route('karyawan.batchBarcode') }}" >
+                        <button id="submitbarcode" type="submit" class="btn btn-sm btn-primary shadow-s">Generate Batch Barcode</button>
+                    </form>
                     </div>
                 </div>
                 
@@ -64,6 +68,7 @@
                                         <th>NPK</th>
                                         <th>Nama Karyawan</th>
                                         <th>Bagian</th>
+                                        <th>QR</th>
                                         <th>Barcode</th>
                                         <!-- <th>Photo</th> -->
                                         <th>Action</th>
@@ -75,8 +80,8 @@
                                         <td>{{ $employee->NPK }}</td>
                                         <td>{{ $employee->NAMA_KARYAWAN }}</td>
                                         <td>{{ $employee->DEPARTEMENT }}</td>
-                                        <td>{{ $employee->BARCODE }}</td>
-                                        <!-- <td align="center"><img src="{{ asset('/foto-npk/' . $employee->NPK . '.jpg') }}" style="width: 100px;" onerror="this.style.display='none'; this.style.width='0px'"></td> -->
+                                        <td class="text-center"><img id="qr" src="{{url('/storage/qr/'. $employee->NPK . '_' . $employee->NAMA_KARYAWAN . '_' . $employee->DEPARTEMENT . '.png')}}" style="width: 150;"></td>
+                                        <td class="text-center"><img id="barcode" src="{{url('/storage/barcode/'. $employee->NPK . '_' . $employee->NAMA_KARYAWAN . '_' . $employee->DEPARTEMENT . '.png')}}" style="width: 150;"></td>
                                         <td align="center">
                                             <a href ="{{ route('karyawan.generateqr', ['id' => $employee->NPK]) }}" class="btn btn-primary btn-circle btn-sm">
                                                 <i class="fas fa-qrcode"></i>
@@ -234,6 +239,7 @@
 <!-- Page level plugins -->
 <script src="{{asset('vendor/datatables/jquery.dataTables.min.js')}}"></script>
 <script src="{{asset('vendor/datatables/dataTables.bootstrap4.min.js')}}"></script>
+<script src="{{asset('vendor/sweetalert/sweetalert2.js')}}"></script>
 
 <!-- Page level custom scripts -->
 <script src="{{asset('js/demo/datatables-demo.js')}}"></script>
@@ -278,6 +284,29 @@
                 $('#employee-PIC').attr('src', userIMG);
             })
         });
+    });
+    
+    $("#submitqr").click(function() {
+        $(this).hide();
+        Swal.fire({
+            title: "Process",
+            html: "Generating All QR Code.. Please Wait!!",
+            timerProgressBar: true,
+            didOpen: () => {
+                Swal.showLoading();
+            },
+        })
+    });
+    $("#submitbarcode").click(function() {
+        $(this).hide();
+        Swal.fire({
+            title: "Process",
+            html: "Generating All Barcode.. Please Wait!!",
+            timerProgressBar: true,
+            didOpen: () => {
+                Swal.showLoading();
+            },
+        })
     });
 </script>
 </html>

@@ -18,7 +18,7 @@
             <i class="fas fa-fw fa-tachometer-alt"></i>
             <span>Dashboard</span></a>
     </li>
-
+    @if($auth == true)
     @if($roleusers[0]->rolename == 'Admin')
     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUser"
@@ -46,7 +46,9 @@
         </div>
     </li>
     @endif
+    @endif
     
+    @if($auth == true)
     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseEmployee"
             aria-expanded="true" aria-controls="collapseEmployee">
@@ -59,20 +61,20 @@
             </div>
         </div>
     </li>
+    @endif
     
-    <!-- <li class="nav-item">
+    <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseScanner"
             aria-expanded="true" aria-controls="collapseScanner">
-            <i class="fas fa-fw fa-qcode"></i>
-            <span>Scanner</span>
+            <i class="fas fa-fw fa-vcard"></i>
+            <span>Scanner Check</span>
         </a>
         <div id="collapseScanner" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item" href="{{ route('scanner.qrscanning') }}">QR Scanner</a>
-                <a class="collapse-item" href="{{ route('scanner.scanning') }}">Barcode Scanner</a>
+                <a class="collapse-item" href="{{ route('scanner.checkscanning') }}">Check Scanning</a>
             </div>
         </div>
-    </li> -->
+    </li>
     
     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseCanteen"
@@ -81,9 +83,18 @@
             <span>Kantin</span>
         </a>
         <div id="collapseCanteen" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-            @if($roleusers[0]->rolename == 'HR' || $roleusers[0]->rolename == 'Admin')
+            @if($auth == true)
+                @if($roleusers[0]->rolename == 'HR' || $roleusers[0]->rolename == 'Admin')
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <a class="collapse-item" href="{{ route('canteen.index') }}">Data Kantin</a>
+                    <a class="collapse-item" href="{{ route('scanner.barcodescanning1') }}">Barcode Scanner 1</a>
+                    <a class="collapse-item" href="{{ route('scanner.barcodescanning2') }}">Barcode Scanner 2</a>
+                    <a class="collapse-item" href="{{ route('canteen.scancanteen1') }}">QR Canteen 1</a>
+                    <a class="collapse-item" href="{{ route('canteen.scancanteen2') }}">QR Canteen 2</a>
+                </div>
+                @endif
+            @else
             <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item" href="{{ route('canteen.index') }}">Data Kantin</a>
                 <a class="collapse-item" href="{{ route('canteen.scancanteen1') }}">Scan Canteen 1</a>
                 <a class="collapse-item" href="{{ route('canteen.scancanteen2') }}">Scan Canteen 2</a>
             </div>

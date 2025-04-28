@@ -25,6 +25,18 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [LoginController::class, 'login'])->name('/');
+Route::get('/home', [HomeController::class, 'index'])->name('home');
+
+Route::get('/canteen/canteen', [CanteenController::class, 'canteen'])->name('canteen.canteen');
+Route::get('/canteen/scancanteen1', [CanteenController::class, 'scancanteen1'])->name('canteen.scancanteen1');
+Route::get('/canteen/showcanteen1', [CanteenController::class, 'showcanteen1'])->name('canteen.showcanteen1');
+Route::get('/canteen/scancanteen2', [CanteenController::class, 'scancanteen2'])->name('canteen.scancanteen2');
+Route::get('/canteen/showcanteen2', [CanteenController::class, 'showcanteen2'])->name('canteen.showcanteen2');
+
+Route::get('/scanner/barcodecanteen1', [ScannerController::class, 'barcodecanteen1'])->name('scanner.barcodecanteen1');
+Route::get('/scanner/barcodecanteen2', [ScannerController::class, 'barcodecanteen2'])->name('scanner.barcodecanteen2');
+Route::get('/scanner/barcodescanning1', [ScannerController::class, 'barcodescanning1'])->name('scanner.barcodescanning1');
+Route::get('/scanner/barcodescanning2', [ScannerController::class, 'barcodescanning2'])->name('scanner.barcodescanning2');
 
 Route::group(['middleware' => 'guest'], function () {
     Route::get('/register', [RegisterController::class, 'index'])->name('register');
@@ -36,7 +48,6 @@ Route::group(['middleware' => 'guest'], function () {
 
 
 Route::group(['middleware' => 'auth'], function () {
-    Route::get('/home', [HomeController::class, 'index'])->name('home');
     Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 
     //Register
@@ -62,30 +73,22 @@ Route::group(['middleware' => 'auth'], function () {
     //Canteen
     Route::get('/canteen/index', [CanteenController::class, 'index'])->name('canteen.index');
     Route::get('/canteen/showcanteen', [CanteenController::class, 'showcanteen'])->name('canteen.showcanteen');
-    Route::get('/canteen/showcanteen1', [CanteenController::class, 'showcanteen1'])->name('canteen.showcanteen1');
-    Route::get('/canteen/showcanteen2', [CanteenController::class, 'showcanteen2'])->name('canteen.showcanteen2');
-    Route::get('/canteen/canteen', [CanteenController::class, 'canteen'])->name('canteen.canteen');
-    Route::get('/canteen/canteen1', [CanteenController::class, 'canteen1'])->name('canteen.canteen1');
-    Route::get('/canteen/canteen2', [CanteenController::class, 'canteen2'])->name('canteen.canteen2');
-    Route::get('/canteen/scancanteen1', [CanteenController::class, 'scancanteen1'])->name('canteen.scancanteen1');
-    Route::get('/canteen/scancanteen2', [CanteenController::class, 'scancanteen2'])->name('canteen.scancanteen2');
 
     //Scanner
     Route::get('/scanner/index', [ScannerController::class, 'index'])->name('scanner.index');
-    Route::get('/scanner/qrscanning', [ScannerController::class, 'qrscanning'])->name('scanner.qrscanning');
-    Route::get('/scanner/scanning', [ScannerController::class, 'scanning'])->name('scanner.scanning');
+    Route::get('/scanner/checkscanning', [ScannerController::class, 'checkscanning'])->name('scanner.checkscanning');
     Route::get('/scanner/create', [ScannerController::class, 'create'])->name('scanner.create');
     Route::get('/scanner/batch', [ScannerController::class, 'batch'])->name('scanner.batch');
     Route::post('/scanner/store', [ScannerController::class, 'store'])->name('scanner.store');
     Route::get('/scanner/store', [ScannerController::class, 'store'])->name('scanner.store');
     Route::get('/scanner/canteen', [ScannerController::class, 'canteen'])->name('scanner.canteen');
-    Route::get('/scanner/barcode', [ScannerController::class, 'barcode'])->name('scanner.barcode');
 
     //Karyawan
     Route::get('/karyawan/index', [KaryawanController::class, 'index'])->name('karyawan.index');
     Route::get('/karyawan/detail/{id}', [KaryawanController::class, 'show'])->name('karyawan.detail');
     Route::get('/karyawan/generateqr/{id}', [KaryawanController::class, 'generateqr'])->name('karyawan.generateqr');
-    Route::get('/karyawan/batch', [KaryawanController::class, 'batch'])->name('karyawan.batch');
+    Route::get('/karyawan/batchQR', [KaryawanController::class, 'batchQR'])->name('karyawan.batchQR');
+    Route::get('/karyawan/batchBarcode', [KaryawanController::class, 'batchBarcode'])->name('karyawan.batchBarcode');
 
     //Export
     Route::get('/canteen/export', [CanteenController::class, 'export_excel'])->name('canteen.export');

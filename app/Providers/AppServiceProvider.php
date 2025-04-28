@@ -24,14 +24,17 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         view()->composer('*', function ($view) {
+            $auth = false;
             if (Auth::check()) {
+                $auth = true;
                 $roleusers = User::select('users.name', 'users.email', 'users.id', 'model_has_roles.*', 'roles.name as rolename')
                     ->leftJoin('model_has_roles', 'model_has_roles.model_id', '=', 'users.id')
                     ->leftJoin('roles', 'roles.id', '=', 'model_has_roles.role_id')
                     ->where('users.id', '=', Auth::user()->id)
                     ->get();
-
-                View::share(['roleusers' => $roleusers]);
+                View::share(['roleusers' => $roleusers, 'auth' => $auth]);
+            } else {
+                View::share(['auth' => $auth]);
             }
         });
     }
