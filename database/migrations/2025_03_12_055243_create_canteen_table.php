@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('canteen_no');
             $table->string('npk');
             $table->string('name');
+            $table->string('dept');
             $table->date('date');
             $table->timestamps();
         });

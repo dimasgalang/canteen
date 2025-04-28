@@ -21,41 +21,58 @@
                 </div>
                 
                 <!-- DataTales Example -->
-                <div class="card shadow mb-4">
-                    <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Data QR</h6>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3">
+                                    <h6 class="m-0 font-weight-bold text-primary">Use Webcam</h6>
+                                </div>
+                                <div class="card-body">
+                                    @if ($message = Session::get('success'))
+                                    <div class="alert alert-success alert-block">
+                                        <button type="button" class="close" data-dismiss="alert">×</button>	
+                                        <strong>{{ $message }}</strong>
+                                    </div>
+                                    @endif
+            
+                                    @if ($message = Session::get('error'))
+                                    <div class="alert alert-danger alert-block">
+                                        <button type="button" class="close" data-dismiss="alert">×</button>	
+                                        <strong>{{ $message }}</strong>
+                                    </div>
+                                    @endif
+            
+                                    @if ($message = Session::get('warning'))
+                                    <div class="alert alert-warning alert-block">
+                                        <button type="button" class="close" data-dismiss="alert">×</button>	
+                                        <strong>{{ $message }}</strong>
+                                    </div>
+                                    @endif
+            
+                                    @if ($message = Session::get('info'))
+                                    <div class="alert alert-info alert-block">
+                                        <button type="button" class="close" data-dismiss="alert">×</button>	
+                                        <strong>{{ $message }}</strong>
+                                    </div>
+                                    @endif
+                                    <center><div id="reader" style="width: 500px;"></div></center>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3">
+                                    <h6 class="m-0 font-weight-bold text-primary">Use Scanner</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div>
+                                        <label>Barcode :</label>
+                                        <input class="form-control" type="text" id="barcode" name="barcode" autocomplete="off">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="card-body">
-                        @if ($message = Session::get('success'))
-                        <div class="alert alert-success alert-block">
-                            <button type="button" class="close" data-dismiss="alert">×</button>	
-                            <strong>{{ $message }}</strong>
-                        </div>
-                        @endif
-
-                        @if ($message = Session::get('error'))
-                        <div class="alert alert-danger alert-block">
-                            <button type="button" class="close" data-dismiss="alert">×</button>	
-                            <strong>{{ $message }}</strong>
-                        </div>
-                        @endif
-
-                        @if ($message = Session::get('warning'))
-                        <div class="alert alert-warning alert-block">
-                            <button type="button" class="close" data-dismiss="alert">×</button>	
-                            <strong>{{ $message }}</strong>
-                        </div>
-                        @endif
-
-                        @if ($message = Session::get('info'))
-                        <div class="alert alert-info alert-block">
-                            <button type="button" class="close" data-dismiss="alert">×</button>	
-                            <strong>{{ $message }}</strong>
-                        </div>
-                        @endif
-                        <center><div id="reader" style="width: 500px;"></div></center>
-                    </div>
-                </div>
                 <!-- Content Row -->
 
             </div>
@@ -114,6 +131,36 @@
         }
     );
 
+    $(document).ready(function () {
+        document.getElementById("barcode").focus();
+        $('input[name="barcode"]').blur(function(){
+            $('input[name="barcode"]').focus();
+        });
+        
+        var typingTimer;
+        var doneTypingInterval = 500;
+        var $input = $('#barcode');
+
+        $input.on('keyup', function () {
+            clearTimeout(typingTimer);
+            typingTimer = setTimeout(doneTyping, doneTypingInterval);
+        });
+
+        $input.on('keydown', function () {
+            clearTimeout(typingTimer);
+        });
+
+        function doneTyping () {
+            onSuccessScanner();
+        }
+        // document.getElementById("barcode").addEventListener("input", onScanSuccess);
+    });
+
+    function onSuccessScanner() {
+        var decoder = document.getElementById("barcode").value;
+        Swal.fire(decoder);
+        document.getElementById("barcode").value = '';
+    }
     function onScanSuccess(decodedText, decodedResult) {
         // redirect ke link hasil scan
         var decoder = decodedResult.decodedText;
@@ -122,4 +169,5 @@
     }
     html5QRCodeScanner.render(onScanSuccess);
 </script>
+
 </html>
