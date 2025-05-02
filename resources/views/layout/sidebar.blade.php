@@ -66,7 +66,7 @@
     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseScanner"
             aria-expanded="true" aria-controls="collapseScanner">
-            <i class="fas fa-fw fa-vcard"></i>
+            <i class="fas fa-fw fa-check"></i>
             <span>Scanner Check</span>
         </a>
         <div id="collapseScanner" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
@@ -95,8 +95,8 @@
                 @endif
             @else
             <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item" href="{{ route('canteen.scancanteen1') }}">Scan Canteen 1</a>
-                <a class="collapse-item" href="{{ route('canteen.scancanteen2') }}">Scan Canteen 2</a>
+                <a class="collapse-item" href="{{ route('scanner.barcodescanning1') }}">Barcode Scanner 1</a>
+                <a class="collapse-item" href="{{ route('scanner.barcodescanning2') }}">Barcode Scanner 2</a>
             </div>
             @endif
         </div>

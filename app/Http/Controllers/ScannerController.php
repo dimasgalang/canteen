@@ -107,12 +107,12 @@ class ScannerController extends Controller
                     'dept' => $dept,
                     'date' => Carbon::now()
                 ]);
-                Alert::success('Scan Successfully!', 'Employee ' . $npk . ' - ' . $name . ' successfully scanned!')->autoClose(1000);
+                Alert::success('Scan Successfully!', 'Employee ' . $npk . ' - ' . $name . ' successfully scanned!')->autoClose(500);
             } else {
-                Alert::error('Alert!', 'Employee ' . $npk . ' - ' . $name . ' already scanned!')->autoClose(1000);
+                Alert::error('Alert!', 'Employee ' . $npk . ' - ' . $name . ' already scanned!')->autoClose(500);
             }
         } catch (Exception $e) {
-            Alert::error('Error!', "Invalid input, please check the qr data!")->autoClose(2000);
+            Alert::error('Error!', "Invalid input, please check the qr data!")->autoClose(1000);
         }
         return redirect('/scanner/barcodescanning1');
     }
@@ -136,12 +136,12 @@ class ScannerController extends Controller
                     'dept' => $dept,
                     'date' => Carbon::now()
                 ]);
-                Alert::success('Scan Successfully!', 'Employee ' . $npk . ' - ' . $name . ' successfully scanned!')->autoClose(1000);
+                Alert::success('Scan Successfully!', 'Employee ' . $npk . ' - ' . $name . ' successfully scanned!')->autoClose(500);
             } else {
-                Alert::error('Alert!', 'Employee ' . $npk . ' - ' . $name . ' already scanned!')->autoClose(1000);
+                Alert::error('Alert!', 'Employee ' . $npk . ' - ' . $name . ' already scanned!')->autoClose(500);
             }
         } catch (Exception $e) {
-            Alert::error('Error!', "Invalid input, please check the qr data!")->autoClose(2000);
+            Alert::error('Error!', "Invalid input, please check the qr data!")->autoClose(1000);
         }
         return redirect('/scanner/barcodescanning2');
     }
