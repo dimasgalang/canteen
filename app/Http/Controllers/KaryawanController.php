@@ -39,11 +39,11 @@ class KaryawanController extends Controller
             // $qr_data = "65824_DIMAS GALANG RAMADHAN_IT";
             // $encrypted = Crypt::encryptString($qr_data);
             // $qr_data = "canteen?npk=" . $employee->NPK . "&name=" . $employee->NAMA_KARYAWAN . "&dept=" . $employee->DEPARTEMENT;
-            $qr_data = $employee->NPK . "_" . $employee->NAMA_KARYAWAN . "_" . $employee->DEPARTEMENT;
+            $qr_data = $employee->NPK . "_" . $employee->NAMA_KARYAWAN;
             $qr = FacadesQrCode::format('png')->generate($qr_data);
 
             // $qrImageName = '65824-DIMAS GALANG RAMADHAN-IT.png';
-            $qrImageName = $employee->NPK . "_" . $employee->NAMA_KARYAWAN . "_" . $employee->DEPARTEMENT . '.png';
+            $qrImageName = $employee->NPK . "_" . $employee->NAMA_KARYAWAN . '.png';
 
             Storage::put('public/qr/' . $qrImageName, $qr);
 
