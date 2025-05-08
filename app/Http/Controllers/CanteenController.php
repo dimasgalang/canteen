@@ -39,7 +39,7 @@ class CanteenController extends Controller
             return DataTables::of($canteens)
                 ->addIndexColumn()
                 ->addColumn('created_at_formated', function ($row) {
-                    return date('d-m-Y h:i:s', strtotime($row->created_at));
+                    return date('d-m-Y H:i:s', strtotime($row->created_at));
                 })
                 ->rawColumns(['created_at_formated'])
                 ->filter(function ($instance) use ($request) {
@@ -60,7 +60,7 @@ class CanteenController extends Controller
         return DataTables::of($canteens)
             ->addIndexColumn()
             ->addColumn('created_at_formated', function ($row) {
-                return date('d-m-Y h:i:s', strtotime($row->created_at));
+                return date('d-m-Y H:i:s', strtotime($row->created_at));
             })
             ->rawColumns(['created_at_formated'])
             ->make(true);
@@ -73,7 +73,7 @@ class CanteenController extends Controller
         return DataTables::of($canteens)
             ->addIndexColumn()
             ->addColumn('created_at_formated', function ($row) {
-                return date('d-m-Y h:i:s', strtotime($row->created_at));
+                return date('d-m-Y H:i:s', strtotime($row->created_at));
             })
             ->rawColumns(['created_at_formated'])
             ->make(true);
