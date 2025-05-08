@@ -94,7 +94,11 @@ class ScannerController extends Controller
             $exploding = explode('_', $request->barcode);
             $npk = $exploding[0];
             $name = $exploding[1];
-            $dept = $exploding[2];
+            if (!empty($exploding[2])) {
+                $dept = $exploding[2];
+            } else {
+                $dept = null;
+            }
             // dd($dept);
 
             $checkExist = Canteen::select("*")->where('created_at', '<=', Carbon::now()->subHours(0)->toDateTimeString())->where('npk', '=', $npk)->get();
@@ -124,7 +128,11 @@ class ScannerController extends Controller
             $exploding = explode('_', $request->barcode);
             $npk = $exploding[0];
             $name = $exploding[1];
-            $dept = $exploding[2];
+            if (!empty($exploding[2])) {
+                $dept = $exploding[2];
+            } else {
+                $dept = null;
+            }
 
             $checkExist = Canteen::select("*")->where('created_at', '<=', Carbon::now()->subHours(0)->toDateTimeString())->where('npk', '=', $npk)->get();
 
