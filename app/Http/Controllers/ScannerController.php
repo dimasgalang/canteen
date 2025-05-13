@@ -101,7 +101,7 @@ class ScannerController extends Controller
             }
             // dd($dept);
 
-            $checkExist = Canteen::select("*")->where('created_at', '<=', Carbon::now()->subHours(0)->toDateTimeString())->where('npk', '=', $npk)->get();
+            $checkExist = Canteen::select("*")->where('created_at', '>=', Carbon::today()->setTime(0, 0, 0))->where('npk', '=', $npk)->get();
             $checkLemburExist = Canteen::select("*")->where('created_at', '>=', Carbon::today()->setTime(18, 0, 0))->where('npk', '=', $npk)->get();
             // dd($checkLemburExist);
             if (count($checkExist) < 1) {
@@ -151,7 +151,7 @@ class ScannerController extends Controller
                 $dept = null;
             }
 
-            $checkExist = Canteen::select("*")->where('created_at', '<=', Carbon::now()->subHours(0)->toDateTimeString())->where('npk', '=', $npk)->get();
+            $checkExist = Canteen::select("*")->where('created_at', '>=', Carbon::today()->setTime(0, 0, 0))->where('npk', '=', $npk)->get();
             $checkLemburExist = Canteen::select("*")->where('created_at', '>=', Carbon::today()->setTime(18, 0, 0))->where('npk', '=', $npk)->get();
             // dd($checkLemburExist);
             if (count($checkExist) < 1) {
