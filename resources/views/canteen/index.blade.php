@@ -28,7 +28,7 @@
                             </div>
                             <div class="card-body">
                                 <div class="row">
-                                    <div class="col-xl-4 col-md-6 mb-4">
+                                    <div class="col-xl-3 col-md-6 mb-4">
                                         <div>
                                             <label>From Date :</label>
                                             <input class="date form-control" type="date" id="fromdate" name="fromdate" value="">
@@ -37,19 +37,30 @@
                                         <button id='filter-data' type="button" class="btn btn-primary">Filter</button>
                                         <button id='export' type="submit" class="btn btn-success">Export To Excel</button>
                                     </div>
-                                    <div class="col-xl-4 col-md-6 mb-4">
+                                    <div class="col-xl-3 col-md-6 mb-4">
                                         <div>
                                             <label>To Date :</label>
                                             <input class="date form-control" type="date" id="todate" name="todate" value="">
                                         </div>
                                     </div>
-                                    <div class="col-xl-4 col-md-6 mb-4">
+                                    <div class="col-xl-3 col-md-6 mb-4">
                                         <div>
                                             <label>Canteen :</label>
                                             <select name="canteen_no" id="canteen_no" class="form-control">
                                                 <option disabled selected hidden>Select Canteen</option>
                                                 <option value="1">Canteen 1</option>
                                                 <option value="2">Canteen 2</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-xl-3 col-md-6 mb-4">
+                                        <div>
+                                            <label>Break :</label>
+                                            <select name="break" id="break" class="form-control">
+                                                <option disabled selected hidden>Select Break</option>
+                                                <option value="normal">Normal Break</option>
+                                                <option value="overtime">Overtime Break</option>
                                             </select>
                                         </div>
                                     </div>
@@ -141,6 +152,7 @@
                     d.fromdate = document.getElementById('fromdate').value,
                     d.todate = document.getElementById('todate').value,
                     d.canteen_no = document.getElementById('canteen_no').value
+                    d.break = document.getElementById('break').value
                 }
             },
         columns: [

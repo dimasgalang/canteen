@@ -32,17 +32,28 @@ class CanteensExport implements WithHeadings, WithStrictNullComparison, WithEven
     protected $fromdate;
     protected $todate;
     protected $canteen_no;
+    protected $break;
 
-    function __construct($fromdate, $todate, $canteen_no)
+    function __construct($fromdate, $todate, $canteen_no, $break)
     {
         $this->fromdate = $fromdate;
         $this->todate = $todate;
         $this->canteen_no = $canteen_no;
+        $this->break = $break;
     }
 
     public function collection()
     {
-        return Canteen::select('*')->where('date', '>=', $this->fromdate)->where('date', '<=', $this->todate)->where('canteen_no', '=', $this->canteen_no)->get();
+        $filterfrom = '';
+        $filterto = '';
+        if ($this->break == 'normal') {
+            $filterfrom = $this->todate . '12:00:00';
+            $filterto = $this->todate . '13:00:00';
+        } else {
+            $filterfrom = $this->todate . '18:00:00';
+            $filterto = $this->todate . '20:00:00';
+        }
+        return Canteen::select('*')->where('date', '>=', $this->fromdate)->where('date', '<=', $this->todate)->where('canteen_no', '=', $this->canteen_no)->where('created_at', '>=', $filterfrom)->where('created_at', '<=', $filterto)->get();
     }
 
     public function headings(): array

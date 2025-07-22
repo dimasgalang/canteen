@@ -44,10 +44,26 @@ class CanteenController extends Controller
                 ->rawColumns(['created_at_formated'])
                 ->filter(function ($instance) use ($request) {
                     if ($request->filled('fromdate') && $request->filled('todate')) {
-                        $instance
-                            ->where('date', '>=', $request->get('fromdate'))
-                            ->where('date', '<=', $request->get('todate'))
-                            ->where('canteen_no', '=', $request->get('canteen_no'));
+                        // dd($request->get('break'));
+                        if ($request->get('break') == 'normal') {
+                            $filterfrom = $request->fromdate . ' 12:00:00';
+                            $filterto = $request->todate . ' 13:00:00';
+                            $instance
+                                ->where('date', '>=', $request->get('fromdate'))
+                                ->where('date', '<=', $request->get('todate'))
+                                ->where('canteen_no', '=', $request->get('canteen_no'))
+                                ->where('created_at', '>=', $filterfrom)
+                                ->where('created_at', '<=', $filterto);
+                        } else {
+                            $filterfrom = $request->todate . ' 18:00:00';
+                            $filterto = $request->todate . ' 20:00:00';
+                            $instance
+                                ->where('date', '>=', $request->get('fromdate'))
+                                ->where('date', '<=', $request->get('todate'))
+                                ->where('canteen_no', '=', $request->get('canteen_no'))
+                                ->where('created_at', '>=', $filterfrom)
+                                ->where('created_at', '<=', $filterto);
+                        }
                     }
                 })->make(true);
         };
@@ -116,6 +132,6 @@ class CanteenController extends Controller
     public function export_excel(Request $request)
     {
         // dd($request->fromdate);
-        return Excel::download(new CanteensExport($request->fromdate, $request->todate, $request->canteen_no), 'Canteen Data_' . $request->fromdate . '_' . $request->todate . '_Kantin ' . $request->canteen_no . '.xlsx');
+        return Excel::download(new CanteensExport($request->fromdate, $request->todate, $request->canteen_no, $request->break), 'Canteen Data_' . $request->fromdate . '_' . $request->todate . '_Kantin ' . $request->canteen_no . '_' . $request->break . '.xlsx');
     }
 }
