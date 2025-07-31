@@ -118,7 +118,7 @@ class ScannerController extends Controller
                     Alert::error('Alert!', 'Employee ' . $npk . ' - ' . $name . ' already scanned!')->autoClose(500);
                 } elseif ((Carbon::now() < Carbon::today()->setTime(16, 30, 0)) && (Carbon::now() > Carbon::today()->setTime(13, 0, 0))) {
                     Alert::warning('Alert!', 'Belum masuk waktu istirahat ke-2!')->autoClose(2500);
-                } elseif ((Carbon::now() >= Carbon::today()->setTime(16, 30, 0)) && (Carbon::now() <= Carbon::today()->setTime(18, 00, 0)) && (count($checkExist) > 0) && (count($checkLemburExist) < 1)) {
+                } elseif ((Carbon::now() >= Carbon::today()->setTime(16, 30, 0)) && (Carbon::now() <= Carbon::today()->setTime(18, 00, 0)) && (count($checkExist) >= 0) && (count($checkLemburExist) < 1)) {
                     Canteen::firstOrCreate([
                         'canteen_no' => 1,
                         'npk' => $npk,
@@ -168,7 +168,7 @@ class ScannerController extends Controller
                     Alert::error('Alert!', 'Employee ' . $npk . ' - ' . $name . ' already scanned!')->autoClose(500);
                 } elseif ((Carbon::now() < Carbon::today()->setTime(16, 30, 0)) && (Carbon::now() > Carbon::today()->setTime(13, 0, 0))) {
                     Alert::warning('Alert!', 'Belum masuk waktu istirahat ke-2!')->autoClose(2500);
-                } elseif ((Carbon::now() >= Carbon::today()->setTime(16, 30, 0)) && (Carbon::now() <= Carbon::today()->setTime(18, 00, 0)) && (count($checkExist) > 0) && (count($checkLemburExist) < 1)) {
+                } elseif ((Carbon::now() >= Carbon::today()->setTime(16, 30, 0)) && (Carbon::now() <= Carbon::today()->setTime(18, 00, 0)) && (count($checkExist) >= 0) && (count($checkLemburExist) < 1)) {
                     Canteen::firstOrCreate([
                         'canteen_no' => 2,
                         'npk' => $npk,
