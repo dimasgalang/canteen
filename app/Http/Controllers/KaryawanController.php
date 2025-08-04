@@ -110,13 +110,15 @@ class KaryawanController extends Controller
     {
         $employees = DB::connection('sqlsrv')->table('BIODATA')->select('PKWT.*', 'DEPT.DEPARTEMENT', 'BIODATA.*')->leftJoin('DEPT', 'DEPT.ID_DEPT', '=', 'BIODATA.ID_DEPT')->leftJoin('PKWT', 'BIODATA.NPK', '=', 'PKWT.NPK')->where('BIODATA.NPK', '=', $id)->get();
 
-        $path = storage_path('public/qr/single/');
+        // $path = storage_path('public/qr/single/');
+        $path = storage_path('public/qr/');
         // $qr_data = $employee->NPK;
         $qr_data = $employees[0]->NPK . "_" . $employees[0]->NAMA_KARYAWAN;
         $qr = FacadesQrCode::format('png')->generate($qr_data);
         $qrImageName = $employees[0]->NPK . "_" . $employees[0]->NAMA_KARYAWAN . '.png';
 
-        Storage::put('public/qr/single/' . $qrImageName, $qr);
+        // Storage::put('public/qr/single/' . $qrImageName, $qr);
+        Storage::put('public/qr/' . $qrImageName, $qr);
 
         QRFiles::firstOrCreate([
             'npk' => $employees[0]->NPK,

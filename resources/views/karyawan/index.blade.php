@@ -22,9 +22,6 @@
                     <form method="GET" action="{{ route('karyawan.batchQR') }}" >
                         <button id="submitqr" type="submit" class="btn btn-sm btn-primary shadow-s">Generate Batch QR</button>
                     </form>
-                    <form method="GET" action="{{ route('karyawan.batchBarcode') }}" >
-                        <button id="submitbarcode" type="submit" class="btn btn-sm btn-primary shadow-s">Generate Batch Barcode</button>
-                    </form>
                     </div>
                 </div>
                 
@@ -69,8 +66,6 @@
                                         <th>Nama Karyawan</th>
                                         <th>Bagian</th>
                                         <th>QR</th>
-                                        <th>Barcode</th>
-                                        <!-- <th>Photo</th> -->
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -80,8 +75,7 @@
                                         <td>{{ $employee->NPK }}</td>
                                         <td>{{ $employee->NAMA_KARYAWAN }}</td>
                                         <td>{{ $employee->DEPARTEMENT }}</td>
-                                        <td class="text-center"><img id="qr" src="{{url('/storage/qr/'. $employee->NPK . '_' . $employee->NAMA_KARYAWAN . '_' . $employee->DEPARTEMENT . '.png')}}" style="width: 150;"></td>
-                                        <td class="text-center"><img id="barcode" src="{{url('/storage/barcode/'. $employee->NPK . '_' . $employee->NAMA_KARYAWAN . '_' . $employee->DEPARTEMENT . '.png')}}" style="width: 150;"></td>
+                                        <td class="text-center"><img id="qr" src="{{url('/storage/qr/'. $employee->NPK . '_' . $employee->NAMA_KARYAWAN . '.png')}}" style="width: 150;"></td>
                                         <td align="center">
                                             <a href ="{{ route('karyawan.generateqr', ['id' => $employee->NPK]) }}" class="btn btn-primary btn-circle btn-sm">
                                                 <i class="fas fa-qrcode"></i>
