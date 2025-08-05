@@ -47,11 +47,11 @@ class CanteensExport implements WithHeadings, WithStrictNullComparison, WithEven
         $filterfrom = '';
         $filterto = '';
         if ($this->break == 'normal') {
-            $filterfrom = $this->fromdate . ' 12:00:00';
-            $filterto = $this->todate . ' 13:00:00';
+            $filterfrom = Carbon::parse($this->fromdate . ' 11:30:00')->format('Y-m-d H:i:s');
+            $filterto = Carbon::parse($this->todate . ' 14:00:00')->format('Y-m-d H:i:s');
         } else {
-            $filterfrom = $this->fromdate . ' 18:00:00';
-            $filterto = $this->todate . ' 20:00:00';
+            $filterfrom = Carbon::parse($this->fromdate . ' 16:30:00')->format('Y-m-d H:i:s');
+            $filterto = Carbon::parse($this->todate . ' 18:00:00')->format('Y-m-d H:i:s');
         }
         return Canteen::select('*')->where('date', '>=', $this->fromdate)->where('date', '<=', $this->todate)->where('canteen_no', '=', $this->canteen_no)->where('created_at', '>=', $filterfrom)->where('created_at', '<=', $filterto)->get();
     }

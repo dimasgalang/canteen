@@ -164,7 +164,7 @@ class ScannerController extends Controller
                 ]);
                 Alert::success('Scan Successfully!', 'Employee ' . $npk . ' - ' . $name . ' successfully scanned!')->autoClose(500);
             } else {
-                if (Carbon::now() < Carbon::today()->setTime(13, 0, 0)) {
+                if (Carbon::now() < Carbon::today()->setTime(14, 0, 0)) {
                     Alert::error('Alert!', 'Employee ' . $npk . ' - ' . $name . ' already scanned!')->autoClose(500);
                 } elseif ((Carbon::now() < Carbon::today()->setTime(16, 30, 0)) && (Carbon::now() > Carbon::today()->setTime(14, 0, 0))) {
                     Alert::warning('Alert!', 'Belum masuk waktu istirahat ke-2!')->autoClose(2500);
