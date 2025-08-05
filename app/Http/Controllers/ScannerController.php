@@ -99,13 +99,13 @@ class ScannerController extends Controller
             } else {
                 $dept = null;
             }
-            // dd($dept);
+            // dd($name);
 
             $checkExist = Canteen::select("*")->where('created_at', '>=', Carbon::today()->setTime(11, 30, 0))->where('created_at', '<', Carbon::today()->setTime(14, 0, 0))->where('npk', '=', $npk)->get();
             $checkLemburExist = Canteen::select("*")->where('created_at', '>=', Carbon::today()->setTime(16, 30, 0))->where('created_at', '<', Carbon::today()->setTime(19, 0, 0))->where('npk', '=', $npk)->get();
             $checkEmployee = DB::connection('sqlsrv')->table('BIODATA')->select('BIODATA.*')->where('BIODATA.NPK', '=', $npk)->get();
 
-            // dd($checkLemburExist);
+            // dd(count($checkEmployee));
             if (count($checkEmployee) > 0) {
                 if (count($checkExist) < 1 && Carbon::now() >= Carbon::today()->setTime(11, 30, 0) && Carbon::now() < Carbon::today()->setTime(14, 00, 0)) {
                     Canteen::firstOrCreate([

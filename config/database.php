@@ -15,7 +15,7 @@ return [
     |
     */
 
-    'default' => env('DB_CONNECTION', 'mysql'),
+    'default' => env('DB_CONNECTION', 'sqlsrvcanteen'),
 
     /*
     |--------------------------------------------------------------------------
@@ -92,6 +92,19 @@ return [
             // 'encrypt' => env('DB_ENCRYPT', 'yes'),
             // 'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'false'),
         ],
+
+        'sqlsrvcanteen' => [
+            'driver' => 'sqlsrv',
+            'url' => env('DATABASE_URL'),
+            'host' => env('DB_CANTEEN_HOST', 'localhost'),
+            'port' => env('DB_CANTEEN_PORT', '1433'),
+            'database' => env('DB_CANTEEN_DATABASE', 'forge'),
+            'username' => env('DB_CANTEEN_USERNAME', 'forge'),
+            'password' => env('DB_CANTEEN_PASSWORD', ''),
+            'charset' => 'utf8',
+            'prefix' => '',
+            'prefix_indexes' => true,
+        ]
 
     ],
 

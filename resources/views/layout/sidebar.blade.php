@@ -89,8 +89,8 @@
                     <a class="collapse-item" href="{{ route('canteen.index') }}">Data Kantin</a>
                     <a class="collapse-item" href="{{ route('scanner.barcodescanning1') }}">Barcode Scanner 1</a>
                     <a class="collapse-item" href="{{ route('scanner.barcodescanning2') }}">Barcode Scanner 2</a>
-                    <a class="collapse-item" href="{{ route('canteen.scancanteen1') }}">QR Canteen 1</a>
-                    <a class="collapse-item" href="{{ route('canteen.scancanteen2') }}">QR Canteen 2</a>
+                    <!-- <a class="collapse-item" href="{{ route('canteen.scancanteen1') }}">QR Canteen 1</a>
+                    <a class="collapse-item" href="{{ route('canteen.scancanteen2') }}">QR Canteen 2</a> -->
                 </div>
                 @endif
             @else

@@ -16,6 +16,7 @@ class CanteenController extends Controller
     public function index()
     {
         $canteens = Canteen::select('*')->where('date', '=', Carbon::today()->toDateString())->orderByDesc('created_at')->get();
+        // dd($canteens);
         return view('canteen.index', compact('canteens'));
     }
 
@@ -35,7 +36,8 @@ class CanteenController extends Controller
     public function showcanteen(Request $request)
     {
         if ($request->ajax()) {
-            $canteens = Canteen::orderBy('created_at', 'desc');
+            $canteens = Canteen::select('*');
+            // dd($canteens);
             return DataTables::of($canteens)
                 ->addIndexColumn()
                 ->addColumn('created_at_formated', function ($row) {
@@ -46,8 +48,8 @@ class CanteenController extends Controller
                     if ($request->filled('fromdate') && $request->filled('todate')) {
                         // dd($request->get('break'));
                         if ($request->get('break') == 'normal') {
-                            $filterfrom = $request->fromdate . ' 12:00:00';
-                            $filterto = $request->todate . ' 13:00:00';
+                            $filterfrom = $request->fromdate . ' 11:00:00';
+                            $filterto = $request->todate . ' 14:00:00';
                             $instance
                                 ->where('date', '>=', $request->get('fromdate'))
                                 ->where('date', '<=', $request->get('todate'))
@@ -55,7 +57,7 @@ class CanteenController extends Controller
                                 ->where('created_at', '>=', $filterfrom)
                                 ->where('created_at', '<=', $filterto);
                         } else {
-                            $filterfrom = $request->todate . ' 18:00:00';
+                            $filterfrom = $request->fromdate . ' 17:00:00';
                             $filterto = $request->todate . ' 20:00:00';
                             $instance
                                 ->where('date', '>=', $request->get('fromdate'))
