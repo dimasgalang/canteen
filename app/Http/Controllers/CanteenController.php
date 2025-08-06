@@ -48,23 +48,17 @@ class CanteenController extends Controller
                     if ($request->filled('fromdate') && $request->filled('todate')) {
                         // dd($request->get('break'));
                         if ($request->get('break') == 'normal') {
-                            $filterfrom = $request->fromdate . ' 11:00:00';
-                            $filterto = $request->todate . ' 14:00:00';
+                            $filterfrom = Carbon::parse($request->fromdate . ' 11:00:00')->format('H:i:s');
+                            $filterto = Carbon::parse($request->todate . ' 14:00:00')->format('H:i:s');
                             $instance
-                                ->where('date', '>=', $request->get('fromdate'))
-                                ->where('date', '<=', $request->get('todate'))
                                 ->where('canteen_no', '=', $request->get('canteen_no'))
-                                ->where('created_at', '>=', $filterfrom)
-                                ->where('created_at', '<=', $filterto);
+                                ->whereRaw('CAST(created_at AS TIME) BETWEEN ? AND ?', ['11:00:00', '14:00:00']);
                         } else {
-                            $filterfrom = $request->fromdate . ' 17:00:00';
-                            $filterto = $request->todate . ' 20:00:00';
+                            $filterfrom = Carbon::parse($request->fromdate . ' 17:00:00')->format('H:i:s');
+                            $filterto = Carbon::parse($request->todate . ' 20:00:00')->format('H:i:s');
                             $instance
-                                ->where('date', '>=', $request->get('fromdate'))
-                                ->where('date', '<=', $request->get('todate'))
                                 ->where('canteen_no', '=', $request->get('canteen_no'))
-                                ->where('created_at', '>=', $filterfrom)
-                                ->where('created_at', '<=', $filterto);
+                                ->whereRaw('CAST(created_at AS TIME)BETWEEN ? AND ?', ['16:00:00', '18:00:00']);
                         }
                     }
                 })->make(true);
