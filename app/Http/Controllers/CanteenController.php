@@ -52,13 +52,13 @@ class CanteenController extends Controller
                             $filterto = Carbon::parse($request->todate . ' 14:00:00')->format('H:i:s');
                             $instance
                                 ->where('canteen_no', '=', $request->get('canteen_no'))
-                                ->whereRaw('CAST(created_at AS TIME) BETWEEN ? AND ?', ['11:00:00', '14:00:00']);
+                                ->whereRaw('CAST(created_at AS TIME) BETWEEN ? AND ?', [$filterfrom, $filterto]);
                         } else {
                             $filterfrom = Carbon::parse($request->fromdate . ' 17:00:00')->format('H:i:s');
                             $filterto = Carbon::parse($request->todate . ' 20:00:00')->format('H:i:s');
                             $instance
                                 ->where('canteen_no', '=', $request->get('canteen_no'))
-                                ->whereRaw('CAST(created_at AS TIME)BETWEEN ? AND ?', ['16:00:00', '18:00:00']);
+                                ->whereRaw('CAST(created_at AS TIME) BETWEEN ? AND ?', [$filterfrom, $filterto]);
                         }
                     }
                 })->make(true);
