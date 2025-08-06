@@ -142,7 +142,7 @@
     $.get(jsonCanteen, function (data) {
         var tableCanteen = $('#dataTable').DataTable({
         destroy: true,
-        // processing: true,
+        processing: true,
         serverSide: true,
         responsive: true,
         dom: 'rtip',

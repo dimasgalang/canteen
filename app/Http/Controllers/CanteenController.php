@@ -36,7 +36,7 @@ class CanteenController extends Controller
     public function showcanteen(Request $request)
     {
         if ($request->ajax()) {
-            $canteens = Canteen::select('*');
+            $canteens = Canteen::take(100);
             // dd($canteens);
             return DataTables::of($canteens)
                 ->addIndexColumn()
@@ -51,12 +51,16 @@ class CanteenController extends Controller
                             $filterfrom = Carbon::parse($request->fromdate . ' 11:00:00')->format('H:i:s');
                             $filterto = Carbon::parse($request->todate . ' 14:00:00')->format('H:i:s');
                             $instance
+                                ->where('date', '>=', $request->get('fromdate'))
+                                ->where('date', '<=', $request->get('todate'))
                                 ->where('canteen_no', '=', $request->get('canteen_no'))
                                 ->whereRaw('CAST(created_at AS TIME) BETWEEN ? AND ?', [$filterfrom, $filterto]);
                         } else {
                             $filterfrom = Carbon::parse($request->fromdate . ' 17:00:00')->format('H:i:s');
                             $filterto = Carbon::parse($request->todate . ' 20:00:00')->format('H:i:s');
                             $instance
+                                ->where('date', '>=', $request->get('fromdate'))
+                                ->where('date', '<=', $request->get('todate'))
                                 ->where('canteen_no', '=', $request->get('canteen_no'))
                                 ->whereRaw('CAST(created_at AS TIME) BETWEEN ? AND ?', [$filterfrom, $filterto]);
                         }
