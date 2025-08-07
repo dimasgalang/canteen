@@ -47,13 +47,13 @@ class CanteensExport implements WithHeadings, WithStrictNullComparison, WithEven
         $filterfrom = '';
         $filterto = '';
         if ($this->break == 'normal') {
-            $filterfrom = Carbon::parse($this->fromdate . ' 11:30:00')->format('Y-m-d H:i:s');
-            $filterto = Carbon::parse($this->todate . ' 14:00:00')->format('Y-m-d H:i:s');
+            $filterfrom = Carbon::parse($this->fromdate . ' 11:30:00')->format('H:i:s');
+            $filterto = Carbon::parse($this->todate . ' 14:00:00')->format('H:i:s');
         } else {
-            $filterfrom = Carbon::parse($this->fromdate . ' 16:30:00')->format('Y-m-d H:i:s');
-            $filterto = Carbon::parse($this->todate . ' 18:00:00')->format('Y-m-d H:i:s');
+            $filterfrom = Carbon::parse($this->fromdate . ' 16:30:00')->format('H:i:s');
+            $filterto = Carbon::parse($this->todate . ' 18:00:00')->format('H:i:s');
         }
-        return Canteen::select('*')->where('date', '>=', $this->fromdate)->where('date', '<=', $this->todate)->where('canteen_no', '=', $this->canteen_no)->where('created_at', '>=', $filterfrom)->where('created_at', '<=', $filterto)->get();
+        return Canteen::select('*')->where('date', '>=', $this->fromdate)->where('date', '<=', $this->todate)->where('canteen_no', '=', $this->canteen_no)->whereTime('created_at', '>=', $filterfrom)->whereTime('created_at', '<=', $filterto)->get();
     }
 
     public function headings(): array
