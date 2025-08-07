@@ -62,7 +62,6 @@ class CanteensExport implements WithHeadings, WithStrictNullComparison, WithEven
             '#',
             'NPK',
             'Nama Karyawan',
-            'Departement',
             'Kantin',
             'Tanggal',
             'Waktu Scanning',
@@ -74,7 +73,6 @@ class CanteensExport implements WithHeadings, WithStrictNullComparison, WithEven
             $canteens->id,
             $canteens->npk,
             $canteens->name,
-            $canteens->dept,
             $canteens->canteen_no,
             $canteens->date,
             $canteens->created_at,
@@ -83,7 +81,7 @@ class CanteensExport implements WithHeadings, WithStrictNullComparison, WithEven
 
     public function styles(Worksheet $sheet)
     {
-        $sheet->getStyle('A1:G1')->applyFromArray(
+        $sheet->getStyle('A1:F1')->applyFromArray(
             [
                 'font' => [
                     'name' => 'Arial',
@@ -128,11 +126,10 @@ class CanteensExport implements WithHeadings, WithStrictNullComparison, WithEven
                     $workSheet->getColumnDimension('B')->setWidth(10);
                     $workSheet->getColumnDimension('C')->setWidth(20);
                     $workSheet->getColumnDimension('D')->setWidth(10);
-                    $workSheet->getColumnDimension('E')->setWidth(10);
-                    $workSheet->getColumnDimension('F')->setWidth(15);
-                    $workSheet->getColumnDimension('G')->setWidth(20);
+                    $workSheet->getColumnDimension('E')->setWidth(15);
+                    $workSheet->getColumnDimension('F')->setWidth(20);
 
-                    $workSheet->getStyle("A$index:G$index")->applyFromArray(
+                    $workSheet->getStyle("A$index:F$index")->applyFromArray(
                         [
                             'font' => [
                                 'name' => 'Arial',
