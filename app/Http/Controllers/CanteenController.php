@@ -6,6 +6,7 @@ use App\Exports\CanteensExport;
 use App\Models\Canteen;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Maatwebsite\Excel\Facades\Excel;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -133,5 +134,26 @@ class CanteenController extends Controller
     {
         // dd($request->fromdate);
         return Excel::download(new CanteensExport($request->fromdate, $request->todate, $request->canteen_no, $request->break), 'Canteen Data_' . $request->fromdate . '_' . $request->todate . '_Kantin ' . $request->canteen_no . '_' . $request->break . '.xlsx');
+    }
+
+    public function synchronize(Request $request)
+    {
+        $canteens = Canteen::where('canteen_no', $request->canteen_no)->get();
+        foreach ($canteens as $canteen) {
+            DB::connection('sqlsrvcanteen')->table('canteen')->updateOrInsert([
+            'canteen_no' => $canteen->canteen_no,
+            'npk' => $canteen->npk,
+            'name' => $canteen->name,
+            'dept' => $canteen->dept,
+            'date' => $canteen->date,
+            'created_at' => $canteen->created_at,
+            'updated_at' => $canteen->updated_at,
+            ]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Canteen synchronized successfully',
+        ]);
     }
 }

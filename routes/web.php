@@ -73,6 +73,7 @@ Route::group(['middleware' => 'auth'], function () {
     //Canteen
     Route::get('/canteen/index', [CanteenController::class, 'index'])->name('canteen.index');
     Route::get('/canteen/showcanteen', [CanteenController::class, 'showcanteen'])->name('canteen.showcanteen');
+    Route::post('/canteen/synchronize', [CanteenController::class, 'synchronize'])->name('canteen.synchronize');
 
     //Scanner
     Route::get('/scanner/index', [ScannerController::class, 'index'])->name('scanner.index');
