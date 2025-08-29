@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Exports\CanteensExport;
 use App\Models\Canteen;
-use App\Models\CanteenTwo;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -87,7 +86,7 @@ class CanteenController extends Controller
 
     public function showcanteen2()
     {
-        $canteens = CanteenTwo::orderBy('created_at', 'desc')->where('date', '=', Carbon::today()->toDateString())->where('canteen_no', '=', '2')->get();
+        $canteens = Canteen::orderBy('created_at', 'desc')->where('date', '=', Carbon::today()->toDateString())->where('canteen_no', '=', '2')->get();
         return DataTables::of($canteens)
             ->addIndexColumn()
             ->addColumn('created_at_formated', function ($row) {

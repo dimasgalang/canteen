@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Canteen;
-use App\Models\CanteenTwo;
 use App\Models\QRCode;
 use App\Models\QRFiles;
 use Carbon\Carbon;
@@ -102,18 +101,13 @@ class ScannerController extends Controller
             }
             // dd($name);
 
-            $checkExistFirst = Canteen::select("*")->where('created_at', '>=', Carbon::today()->setTime(11, 30, 0))->where('created_at', '<', Carbon::today()->setTime(14, 0, 0))->where('npk', '=', $npk)->get();
-            $checkExistSecond = CanteenTwo::select("*")->where('created_at', '>=', Carbon::today()->setTime(11, 30, 0))->where('created_at', '<', Carbon::today()->setTime(14, 0, 0))->where('npk', '=', $npk)->get();
-
-            $checkLemburExistFirst = Canteen::select("*")->where('created_at', '>=', Carbon::today()->setTime(16, 30, 0))->where('created_at', '<', Carbon::today()->setTime(18, 0, 0))->where('npk', '=', $npk)->get();
-            $checkLemburExistSecond = CanteenTwo::select("*")->where('created_at', '>=', Carbon::today()->setTime(16, 30, 0))->where('created_at', '<', Carbon::today()->setTime(18, 0, 0))->where('npk', '=', $npk)->get();
-
+            $checkExist = Canteen::select("*")->where('created_at', '>=', Carbon::today()->setTime(11, 30, 0))->where('created_at', '<', Carbon::today()->setTime(14, 0, 0))->where('npk', '=', $npk)->get();
+            $checkLemburExist = Canteen::select("*")->where('created_at', '>=', Carbon::today()->setTime(16, 30, 0))->where('created_at', '<', Carbon::today()->setTime(18, 0, 0))->where('npk', '=', $npk)->get();
             $checkEmployee = DB::connection('sqlsrv')->table('BIODATA')->select('BIODATA.*')->where('BIODATA.NPK', '=', $npk)->get();
-            // dd($checkEmployee);
 
             // dd($checkLemburExist);
             if (count($checkEmployee) > 0) {
-                if (count($checkExistFirst) < 1 && count($checkExistSecond) < 1 && Carbon::now() >= Carbon::today()->setTime(11, 30, 0) && Carbon::now() < Carbon::today()->setTime(14, 00, 0)) {
+                if (count($checkExist) < 1 && Carbon::now() >= Carbon::today()->setTime(11, 30, 0) && Carbon::now() < Carbon::today()->setTime(14, 00, 0)) {
                     Canteen::create([
                         'canteen_no' => 1,
                         'npk' => $npk,
@@ -127,7 +121,7 @@ class ScannerController extends Controller
                         Alert::error('Alert!', 'Employee ' . $npk . ' - ' . $name . ' already scanned!')->autoClose(500);
                     } elseif ((Carbon::now() < Carbon::today()->setTime(16, 30, 0)) && (Carbon::now() > Carbon::today()->setTime(14, 0, 0))) {
                         Alert::warning('Alert!', 'Belum masuk waktu istirahat ke-2!')->autoClose(2500);
-                    } elseif ((Carbon::now() >= Carbon::today()->setTime(16, 30, 0)) && (Carbon::now() <= Carbon::today()->setTime(18, 00, 0)) && (count($checkExistFirst) >= 0) && (count($checkExistSecond) >= 0) && (count($checkLemburExistFirst) < 1) && (count($checkLemburExistSecond) < 1)) {
+                    } elseif ((Carbon::now() >= Carbon::today()->setTime(16, 30, 0)) && (Carbon::now() <= Carbon::today()->setTime(18, 00, 0)) && (count($checkExist) >= 0) && (count($checkLemburExist) < 1)) {
                         Canteen::create([
                             'canteen_no' => 1,
                             'npk' => $npk,
@@ -137,7 +131,7 @@ class ScannerController extends Controller
                         ]);
                         Alert::success('Scan Successfully!', 'Employee ' . $npk . ' - ' . $name . ' successfully scanned!')->autoClose(500);
                     } else {
-                        Alert::error('Alert!', 'Employee ' . $npk . ' - ' . $name . ' already scanned in other canteen!')->autoClose(500);
+                        Alert::error('Alert!', 'Employee ' . $npk . ' - ' . $name . ' already scanned!')->autoClose(500);
                     }
                 }
             } else {
@@ -163,18 +157,14 @@ class ScannerController extends Controller
                 $dept = null;
             }
 
-            $checkExistFirst = Canteen::select("*")->where('created_at', '>=', Carbon::today()->setTime(11, 30, 0))->where('created_at', '<', Carbon::today()->setTime(14, 0, 0))->where('npk', '=', $npk)->get();
-            $checkExistSecond = CanteenTwo::select("*")->where('created_at', '>=', Carbon::today()->setTime(11, 30, 0))->where('created_at', '<', Carbon::today()->setTime(14, 0, 0))->where('npk', '=', $npk)->get();
-
-            $checkLemburExistFirst = Canteen::select("*")->where('created_at', '>=', Carbon::today()->setTime(16, 30, 0))->where('created_at', '<', Carbon::today()->setTime(18, 0, 0))->where('npk', '=', $npk)->get();
-            $checkLemburExistSecond = CanteenTwo::select("*")->where('created_at', '>=', Carbon::today()->setTime(16, 30, 0))->where('created_at', '<', Carbon::today()->setTime(18, 0, 0))->where('npk', '=', $npk)->get();
-
+            $checkExist = Canteen::select("*")->where('created_at', '>=', Carbon::today()->setTime(11, 30, 0))->where('created_at', '<', Carbon::today()->setTime(14, 0, 0))->where('npk', '=', $npk)->get();
+            $checkLemburExist = Canteen::select("*")->where('created_at', '>=', Carbon::today()->setTime(16, 30, 0))->where('created_at', '<', Carbon::today()->setTime(18, 0, 0))->where('npk', '=', $npk)->get();
             $checkEmployee = DB::connection('sqlsrv')->table('BIODATA')->select('BIODATA.*')->where('BIODATA.NPK', '=', $npk)->get();
 
             // dd($checkLemburExist);
             if (count($checkEmployee) > 0) {
-                if (count($checkExistFirst) < 1 && count($checkExistSecond) < 1 && Carbon::now() >= Carbon::today()->setTime(11, 30, 0) && Carbon::now() < Carbon::today()->setTime(14, 00, 0)) {
-                    CanteenTwo::create([
+                if (count($checkExist) < 1 && Carbon::now() >= Carbon::today()->setTime(11, 30, 0) && Carbon::now() < Carbon::today()->setTime(14, 00, 0)) {
+                    Canteen::create([
                         'canteen_no' => 2,
                         'npk' => $npk,
                         'name' => $name,
@@ -187,8 +177,8 @@ class ScannerController extends Controller
                         Alert::error('Alert!', 'Employee ' . $npk . ' - ' . $name . ' already scanned!')->autoClose(500);
                     } elseif ((Carbon::now() < Carbon::today()->setTime(16, 30, 0)) && (Carbon::now() > Carbon::today()->setTime(14, 0, 0))) {
                         Alert::warning('Alert!', 'Belum masuk waktu istirahat ke-2!')->autoClose(2500);
-                    } elseif ((Carbon::now() >= Carbon::today()->setTime(16, 30, 0)) && (Carbon::now() <= Carbon::today()->setTime(18, 00, 0)) && (count($checkExistFirst) >= 0) && (count($checkExistSecond) >= 0) && (count($checkLemburExistFirst) < 1) && (count($checkLemburExistSecond) < 1)) {
-                        CanteenTwo::create([
+                    } elseif ((Carbon::now() >= Carbon::today()->setTime(16, 30, 0)) && (Carbon::now() <= Carbon::today()->setTime(18, 00, 0)) && (count($checkExist) >= 0) && (count($checkLemburExist) < 1)) {
+                        Canteen::create([
                             'canteen_no' => 2,
                             'npk' => $npk,
                             'name' => $name,
@@ -197,7 +187,7 @@ class ScannerController extends Controller
                         ]);
                         Alert::success('Scan Successfully!', 'Employee ' . $npk . ' - ' . $name . ' successfully scanned!')->autoClose(500);
                     } else {
-                        Alert::error('Alert!', 'Employee ' . $npk . ' - ' . $name . ' already scanned in other canteen!')->autoClose(500);
+                        Alert::error('Alert!', 'Employee ' . $npk . ' - ' . $name . ' already scanned!')->autoClose(500);
                     }
                 }
             } else {
