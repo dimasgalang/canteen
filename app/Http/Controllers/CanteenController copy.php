@@ -12,7 +12,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use RealRashid\SweetAlert\Facades\Alert;
 use Yajra\DataTables\Facades\DataTables;
 
-class CanteenController extends Controller
+class CanteenControllerCopy extends Controller
 {
     public function index()
     {

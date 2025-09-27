@@ -3,6 +3,7 @@
 namespace App\Exports;
 
 use App\Models\Canteen;
+use App\Models\CanteenTwo;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\FromCollection;
@@ -53,7 +54,12 @@ class CanteensExport implements WithHeadings, WithStrictNullComparison, WithEven
             $filterfrom = Carbon::parse($this->fromdate . ' 16:00:00')->format('H:i:s');
             $filterto = Carbon::parse($this->todate . ' 24:00:00')->format('H:i:s');
         }
-        return Canteen::select('*')->where('date', '>=', $this->fromdate)->where('date', '<=', $this->todate)->where('canteen_no', '=', $this->canteen_no)->whereTime('created_at', '>=', $filterfrom)->whereTime('created_at', '<=', $filterto)->get();
+
+        if ($this->canteen_no == '1') {
+            return Canteen::select('*')->where('date', '>=', $this->fromdate)->where('date', '<=', $this->todate)->where('canteen_no', '=', $this->canteen_no)->whereTime('created_at', '>=', $filterfrom)->whereTime('created_at', '<=', $filterto)->get();        
+        } else {
+            return CanteenTwo::select('*')->where('date', '>=', $this->fromdate)->where('date', '<=', $this->todate)->where('canteen_no', '=', $this->canteen_no)->whereTime('created_at', '>=', $filterfrom)->whereTime('created_at', '<=', $filterto)->get();
+        }
     }
 
     public function headings(): array

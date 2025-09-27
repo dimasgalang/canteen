@@ -36,7 +36,6 @@
                                         <br>
                                         <button id='filter-data' type="button" class="btn btn-primary">Filter</button>
                                         <button id='export' type="submit" class="btn btn-success">Export To Excel</button>
-                                        <button id='synchronize' type="button" class="btn btn-info"><i class="fas fa-sync fa-sm"></i>  Synchronize</button>
                                     </div>
                                     <div class="col-xl-3 col-md-6 mb-4">
                                         <div>
@@ -173,48 +172,48 @@
         //     tableCanteen.ajax.reload();
         // }, 1000);
 
-        $('#synchronize').click(function(){
-            $(this).hide();
-            Swal.fire({
-                title: "Process",
-                html: "Syncronizing Data.. Please Wait!!",
-                timerProgressBar: true,
-                didOpen: () => {
-                    Swal.showLoading();
-                },
-            })
+        // $('#synchronize').click(function(){
+        //     $(this).hide();
+        //     Swal.fire({
+        //         title: "Process",
+        //         html: "Syncronizing Data.. Please Wait!!",
+        //         timerProgressBar: true,
+        //         didOpen: () => {
+        //             Swal.showLoading();
+        //         },
+        //     })
             
-            $.post('{{ route("canteen.synchronize") }}', {
-                _token: '{{ csrf_token() }}',
-                canteen_no: document.getElementById('canteen_no').value,
-            }).done(function(response) {
-                if (response.success) {
-                // Success logic here
-                $('#synchronize').show();
-                Swal.fire({
-                    title: 'Success',
-                    text: response.message,
-                    icon: 'success',
-                    confirmButtonText: 'OK'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        tableCanteen.draw();
-                    }
-                });
-            } else {
-                // Handle case where success is false
-                Swal.fire({
-                    title: 'Failed',
-                    text: 'Failed to synchronize canteen data',
-                    icon: 'error',
-                    confirmButtonText: 'OK'
-                });
-            }
-            }).fail(function(xhr) {
-                // Handle error response
-                console.log("Error:", xhr.responseText);
-            });
-        });
+        //     $.post('{{ route("canteen.synchronize") }}', {
+        //         _token: '{{ csrf_token() }}',
+        //         canteen_no: document.getElementById('canteen_no').value,
+        //     }).done(function(response) {
+        //         if (response.success) {
+        //         // Success logic here
+        //         $('#synchronize').show();
+        //         Swal.fire({
+        //             title: 'Success',
+        //             text: response.message,
+        //             icon: 'success',
+        //             confirmButtonText: 'OK'
+        //         }).then((result) => {
+        //             if (result.isConfirmed) {
+        //                 tableCanteen.draw();
+        //             }
+        //         });
+        //     } else {
+        //         // Handle case where success is false
+        //         Swal.fire({
+        //             title: 'Failed',
+        //             text: 'Failed to synchronize canteen data',
+        //             icon: 'error',
+        //             confirmButtonText: 'OK'
+        //         });
+        //     }
+        //     }).fail(function(xhr) {
+        //         // Handle error response
+        //         console.log("Error:", xhr.responseText);
+        //     });
+        // });
     });
     </script>
 

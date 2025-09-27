@@ -14,7 +14,7 @@ use RealRashid\SweetAlert\Facades\Alert;
 use SimpleSoftwareIO\QrCode\Facades\QrCode as FacadesQrCode;
 use Illuminate\Support\Facades\Crypt;
 
-class ScannerController extends Controller
+class ScannerControllerCopy extends Controller
 {
     public function checkscanning()
     {
