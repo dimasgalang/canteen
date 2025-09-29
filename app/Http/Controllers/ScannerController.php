@@ -78,7 +78,7 @@ class ScannerController extends Controller
 
     // public function canteen(Request $request)
     // {
-    //     $checkExist = Canteen::select("*")->where('created_at', '<=', $this->now->subHours(0)->toDateTimeString())->where('npk', '=', $request->npk)->get();
+    //     $checkExist = Canteen::select("*")->where('created_at', '<=', (clone $this->now)->subHours(0)->toDateTimeString())->where('npk', '=', $request->npk)->get();
     //     $this->validate($request, [
     //         'npk' => 'required',
     //         'name' => 'required',
@@ -111,40 +111,43 @@ class ScannerController extends Controller
             }
             // dd($name);
 
-            $checkExistFirst = Canteen::select("*")->where('created_at', '>=', $this->dateNow->setTime(11, 30, 0))->where('created_at', '<', $this->dateNow->setTime(14, 0, 0))->where('npk', '=', $npk)->get();
-            $checkExistSecond = CanteenTwo::select("*")->where('created_at', '>=', $this->dateNow->setTime(11, 30, 0))->where('created_at', '<', $this->dateNow->setTime(14, 0, 0))->where('npk', '=', $npk)->get();
+            $checkExistFirst = Canteen::select("*")->where('created_at', '>=', (clone $this->dateNow)->setTime(11, 30, 0))->where('created_at', '<', (clone $this->dateNow)->setTime(14, 0, 0))->where('npk', '=', $npk)->get();
+            $checkExistSecond = CanteenTwo::select("*")->where('created_at', '>=', (clone $this->dateNow)->setTime(11, 30, 0))->where('created_at', '<', (clone $this->dateNow)->setTime(14, 0, 0))->where('npk', '=', $npk)->get();
 
-            $checkLemburExistFirst = Canteen::select("*")->where('created_at', '>=', $this->dateNow->setTime(16, 30, 0))->where('created_at', '<', $this->dateNow->setTime(18, 0, 0))->where('npk', '=', $npk)->get();
-            $checkLemburExistSecond = CanteenTwo::select("*")->where('created_at', '>=', $this->dateNow->setTime(16, 30, 0))->where('created_at', '<', $this->dateNow->setTime(18, 0, 0))->where('npk', '=', $npk)->get();
+            $checkLemburExistFirst = Canteen::select("*")->where('created_at', '>=', (clone $this->dateNow)->setTime(16, 30, 0))->where('created_at', '<', (clone $this->dateNow)->setTime(18, 0, 0))->where('npk', '=', $npk)->get();
+            $checkLemburExistSecond = CanteenTwo::select("*")->where('created_at', '>=', (clone $this->dateNow)->setTime(16, 30, 0))->where('created_at', '<', (clone $this->dateNow)->setTime(18, 0, 0))->where('npk', '=', $npk)->get();
 
             $checkEmployee = DB::connection('sqlsrv')->table('BIODATA')->select('BIODATA.*')->where('BIODATA.NPK', '=', $npk)->get();
             // dd($checkEmployee);
 
-            // dd($checkLemburExist);
+            // dd((count($checkExistFirst) < 1 && count($checkExistSecond) < 1) && (clone (clone $this->now)) >= (clone $this->dateNow)->setTime(11, 30, 0) && (clone $this->now) < (clone $this->dateNow)->setTime(14, 00, 0));
+            // dd($checkExistFirst);
             if (count($checkEmployee) > 0) {
-                if (count($checkExistFirst) < 1 && count($checkExistSecond) < 1 && $this->now >= $this->dateNow->setTime(11, 30, 0) && $this->now < $this->dateNow->setTime(14, 00, 0)) {
+                if ((count($checkExistFirst) < 1 && count($checkExistSecond) < 1) && (clone (clone $this->now)) >= (clone $this->dateNow)->setTime(11, 30, 0) && (clone $this->now) < (clone $this->dateNow)->setTime(14, 00, 0)) {
                     Canteen::firstOrCreate([
                         'canteen_no' => 1,
                         'npk' => $npk,
                         'name' => $name,
                         'dept' => $dept,
-                        'date' => $this->now
+                        'date' => (clone $this->now)
                     ]);
                     Alert::success('Scan Successfully!', 'Employee ' . $npk . ' - ' . $name . ' successfully scanned!')->autoClose(500);
                 } else {
-                    if ($this->now < $this->dateNow->setTime(14, 0, 0)) {
+                    if ((clone $this->now) < (clone $this->dateNow)->setTime(14, 0, 0)) {
                         Alert::error('Alert!', 'Employee ' . $npk . ' - ' . $name . ' already scanned!')->autoClose(500);
-                    } elseif (($this->now < $this->dateNow->setTime(16, 30, 0)) && ($this->now > $this->dateNow->setTime(14, 0, 0))) {
+                    } elseif (((clone $this->now) < (clone $this->dateNow)->setTime(16, 30, 0)) && ((clone $this->now) > (clone $this->dateNow)->setTime(14, 0, 0))) {
                         Alert::warning('Alert!', 'Belum masuk waktu istirahat ke-2!')->autoClose(2500);
-                    } elseif (($this->now >= $this->dateNow->setTime(16, 30, 0)) && ($this->now <= $this->dateNow->setTime(18, 00, 0)) && (count($checkExistFirst) >= 0) && (count($checkExistSecond) >= 0) && (count($checkLemburExistFirst) < 1) && (count($checkLemburExistSecond) < 1)) {
+                    } elseif (((clone $this->now) >= (clone $this->dateNow)->setTime(16, 30, 0)) && ((clone $this->now) <= (clone $this->dateNow)->setTime(18, 00, 0)) && (count($checkExistFirst) >= 0) && (count($checkExistSecond) >= 0) && (count($checkLemburExistFirst) < 1) && (count($checkLemburExistSecond) < 1)) {
                         Canteen::firstOrCreate([
                             'canteen_no' => 1,
                             'npk' => $npk,
                             'name' => $name,
                             'dept' => $dept,
-                            'date' => $this->now
+                            'date' => (clone $this->now)
                         ]);
                         Alert::success('Scan Successfully!', 'Employee ' . $npk . ' - ' . $name . ' successfully scanned!')->autoClose(500);
+                    } elseif(count($checkExistSecond) > 0) {
+                        Alert::error('Alert!', 'Employee ' . $npk . ' - ' . $name . ' already scanned in canteen 2!')->autoClose(500);
                     } else {
                         Alert::error('Alert!', 'Employee ' . $npk . ' - ' . $name . ' already scanned in other canteen!')->autoClose(500);
                     }
@@ -162,7 +165,7 @@ class ScannerController extends Controller
     {
         try {
             // $decrypted = Crypt::decryptString($request->barcode);
-            // dd("Subhours 0 = " . $this->now->subHours(0)->toDateTimeString() . " Subhours 4 = " . $this->now->subHours(4)->toDateTimeString() . " Carbon = " . $this->dateNow->setTime(18, 0, 0));
+            // dd("Subhours 0 = " . (clone $this->now)->subHours(0)->toDateTimeString() . " Subhours 4 = " . (clone $this->now)->subHours(4)->toDateTimeString() . " Carbon = " . (clone $this->dateNow)->setTime(18, 0, 0));
             $exploding = explode('_', $request->barcode);
             $npk = $exploding[0];
             $name = $exploding[1];
@@ -172,39 +175,42 @@ class ScannerController extends Controller
                 $dept = null;
             }
 
-            $checkExistFirst = Canteen::select("*")->where('created_at', '>=', $this->dateNow->setTime(11, 30, 0))->where('created_at', '<', $this->dateNow->setTime(14, 0, 0))->where('npk', '=', $npk)->get();
-            $checkExistSecond = CanteenTwo::select("*")->where('created_at', '>=', $this->dateNow->setTime(11, 30, 0))->where('created_at', '<', $this->dateNow->setTime(14, 0, 0))->where('npk', '=', $npk)->get();
+            $checkExistFirst = Canteen::select("*")->where('created_at', '>=', (clone $this->dateNow)->setTime(11, 30, 0))->where('created_at', '<', (clone $this->dateNow)->setTime(14, 0, 0))->where('npk', $npk)->get();
+            $checkExistSecond = CanteenTwo::select("*")->where('created_at', '>=', (clone $this->dateNow)->setTime(11, 30, 0))->where('created_at', '<', (clone $this->dateNow)->setTime(14, 0, 0))->where('npk', $npk)->get();
 
-            $checkLemburExistFirst = Canteen::select("*")->where('created_at', '>=', $this->dateNow->setTime(16, 30, 0))->where('created_at', '<', $this->dateNow->setTime(18, 0, 0))->where('npk', '=', $npk)->get();
-            $checkLemburExistSecond = CanteenTwo::select("*")->where('created_at', '>=', $this->dateNow->setTime(16, 30, 0))->where('created_at', '<', $this->dateNow->setTime(18, 0, 0))->where('npk', '=', $npk)->get();
+            $checkLemburExistFirst = Canteen::select("*")->where('created_at', '>=', (clone $this->dateNow)->setTime(16, 30, 0))->where('created_at', '<', (clone $this->dateNow)->setTime(18, 0, 0))->where('npk', $npk)->get();
+            $checkLemburExistSecond = CanteenTwo::select("*")->where('created_at', '>=', (clone $this->dateNow)->setTime(16, 30, 0))->where('created_at', '<', (clone $this->dateNow)->setTime(18, 0, 0))->where('npk', $npk)->get();
 
             $checkEmployee = DB::connection('sqlsrv')->table('BIODATA')->select('BIODATA.*')->where('BIODATA.NPK', '=', $npk)->get();
 
-            // dd($checkLemburExist);
+            // dd($checkExistFirst);
+            // dd(($checkExistFirst->isEmpty() || $checkExistSecond->isEmpty()) && ((clone $this->now) >= (clone $this->dateNow)->setTime(11, 30, 0) && (clone $this->now) < (clone $this->dateNow)->setTime(14, 00, 0)));
             if (count($checkEmployee) > 0) {
-                if (count($checkExistFirst) < 1 && count($checkExistSecond) < 1 && $this->now >= $this->dateNow->setTime(11, 30, 0) && $this->now < $this->dateNow->setTime(14, 00, 0)) {
+                if ((count($checkExistFirst) < 1 && count($checkExistSecond) < 1) && (clone $this->now) >= (clone $this->dateNow)->setTime(11, 30, 0) && (clone $this->now) < (clone $this->dateNow)->setTime(14, 00, 0)) {
                     CanteenTwo::firstOrCreate([
                         'canteen_no' => 2,
                         'npk' => $npk,
                         'name' => $name,
                         'dept' => $dept,
-                        'date' => $this->now
+                        'date' => (clone $this->now)
                     ]);
                     Alert::success('Scan Successfully!', 'Employee ' . $npk . ' - ' . $name . ' successfully scanned!')->autoClose(500);
                 } else {
-                    if ($this->now < $this->dateNow->setTime(14, 0, 0)) {
+                    if ((clone $this->now) < (clone $this->dateNow)->setTime(14, 0, 0)) {
                         Alert::error('Alert!', 'Employee ' . $npk . ' - ' . $name . ' already scanned!')->autoClose(500);
-                    } elseif (($this->now < $this->dateNow->setTime(16, 30, 0)) && ($this->now > $this->dateNow->setTime(14, 0, 0))) {
+                    } elseif (((clone $this->now) < (clone $this->dateNow)->setTime(16, 30, 0)) && ((clone $this->now) > (clone $this->dateNow)->setTime(14, 0, 0))) {
                         Alert::warning('Alert!', 'Belum masuk waktu istirahat ke-2!')->autoClose(2500);
-                    } elseif (($this->now >= $this->dateNow->setTime(16, 30, 0)) && ($this->now <= $this->dateNow->setTime(18, 00, 0)) && (count($checkExistFirst) >= 0) && (count($checkExistSecond) >= 0) && (count($checkLemburExistFirst) < 1) && (count($checkLemburExistSecond) < 1)) {
+                    } elseif (((clone $this->now) >= (clone $this->dateNow)->setTime(16, 30, 0)) && ((clone $this->now) <= (clone $this->dateNow)->setTime(18, 00, 0)) && (count($checkExistFirst) >= 0) && (count($checkExistSecond) >= 0) && (count($checkLemburExistFirst) < 1) && (count($checkLemburExistSecond) < 1)) {
                         CanteenTwo::firstOrCreate([
                             'canteen_no' => 2,
                             'npk' => $npk,
                             'name' => $name,
                             'dept' => $dept,
-                            'date' => $this->now
+                            'date' => (clone $this->now)
                         ]);
                         Alert::success('Scan Successfully!', 'Employee ' . $npk . ' - ' . $name . ' successfully scanned!')->autoClose(500);
+                    } elseif(count($checkExistFirst) > 0) {
+                        Alert::error('Alert!', 'Employee ' . $npk . ' - ' . $name . ' already scanned in canteen 1!')->autoClose(500);
                     } else {
                         Alert::error('Alert!', 'Employee ' . $npk . ' - ' . $name . ' already scanned in other canteen!')->autoClose(500);
                     }
