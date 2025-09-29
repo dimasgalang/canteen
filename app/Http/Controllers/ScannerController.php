@@ -133,10 +133,10 @@ class ScannerController extends Controller
                     ]);
                     Alert::success('Scan Successfully!', 'Employee ' . $npk . ' - ' . $name . ' successfully scanned!')->autoClose(500);
                 } else {
-                    if ((clone $this->now) < (clone $this->dateNow)->setTime(14, 0, 0)) {
-                        Alert::error('Alert!', 'Employee ' . $npk . ' - ' . $name . ' already scanned!')->autoClose(500);
+                    if ((clone $this->now) < (clone $this->dateNow)->setTime(11, 30, 0)) {
+                        Alert::warning('Alert!', 'Belum masuk waktu istirahat ke-1!')->autoClose(500);
                     } elseif (((clone $this->now) < (clone $this->dateNow)->setTime(16, 30, 0)) && ((clone $this->now) > (clone $this->dateNow)->setTime(14, 0, 0))) {
-                        Alert::warning('Alert!', 'Belum masuk waktu istirahat ke-2!')->autoClose(2500);
+                        Alert::warning('Alert!', 'Belum masuk waktu istirahat ke-2!')->autoClose(500);
                     } elseif (((clone $this->now) >= (clone $this->dateNow)->setTime(16, 30, 0)) && ((clone $this->now) <= (clone $this->dateNow)->setTime(18, 00, 0)) && (count($checkExistFirst) >= 0) && (count($checkExistSecond) >= 0) && (count($checkLemburExistFirst) < 1) && (count($checkLemburExistSecond) < 1)) {
                         Canteen::firstOrCreate([
                             'canteen_no' => 1,
@@ -149,7 +149,7 @@ class ScannerController extends Controller
                     } elseif(count($checkExistSecond) > 0) {
                         Alert::error('Alert!', 'Employee ' . $npk . ' - ' . $name . ' already scanned in canteen 2!')->autoClose(500);
                     } else {
-                        Alert::error('Alert!', 'Employee ' . $npk . ' - ' . $name . ' already scanned in other canteen!')->autoClose(500);
+                        Alert::error('Alert!', 'Employee ' . $npk . ' - ' . $name . ' already scanned!')->autoClose(500);
                     }
                 }
             } else {
@@ -196,10 +196,10 @@ class ScannerController extends Controller
                     ]);
                     Alert::success('Scan Successfully!', 'Employee ' . $npk . ' - ' . $name . ' successfully scanned!')->autoClose(500);
                 } else {
-                    if ((clone $this->now) < (clone $this->dateNow)->setTime(14, 0, 0)) {
-                        Alert::error('Alert!', 'Employee ' . $npk . ' - ' . $name . ' already scanned!')->autoClose(500);
+                    if ((clone $this->now) < (clone $this->dateNow)->setTime(11, 30, 0)) {
+                        Alert::warning('Alert!', 'Belum masuk waktu istirahat ke-1!')->autoClose(500);
                     } elseif (((clone $this->now) < (clone $this->dateNow)->setTime(16, 30, 0)) && ((clone $this->now) > (clone $this->dateNow)->setTime(14, 0, 0))) {
-                        Alert::warning('Alert!', 'Belum masuk waktu istirahat ke-2!')->autoClose(2500);
+                        Alert::warning('Alert!', 'Belum masuk waktu istirahat ke-2!')->autoClose(500);
                     } elseif (((clone $this->now) >= (clone $this->dateNow)->setTime(16, 30, 0)) && ((clone $this->now) <= (clone $this->dateNow)->setTime(18, 00, 0)) && (count($checkExistFirst) >= 0) && (count($checkExistSecond) >= 0) && (count($checkLemburExistFirst) < 1) && (count($checkLemburExistSecond) < 1)) {
                         CanteenTwo::firstOrCreate([
                             'canteen_no' => 2,
@@ -212,7 +212,7 @@ class ScannerController extends Controller
                     } elseif(count($checkExistFirst) > 0) {
                         Alert::error('Alert!', 'Employee ' . $npk . ' - ' . $name . ' already scanned in canteen 1!')->autoClose(500);
                     } else {
-                        Alert::error('Alert!', 'Employee ' . $npk . ' - ' . $name . ' already scanned in other canteen!')->autoClose(500);
+                        Alert::error('Alert!', 'Employee ' . $npk . ' - ' . $name . ' already scanned!')->autoClose(500);
                     }
                 }
             } else {
