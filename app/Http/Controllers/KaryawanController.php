@@ -17,21 +17,24 @@ class KaryawanController extends Controller
 {
     public function index()
     {
-        $employees = DB::connection('sqlsrv')->table('BIODATA')->select('BIODATA.*', 'DEPT.DEPARTEMENT')->leftJoin('DEPT', 'DEPT.ID_DEPT', '=', 'BIODATA.ID_DEPT')->orderBy('DEPARTEMENT', 'ASC')->get();
+        $outsourcees = DB::connection('sqlsrv')->table('BIODATA_OS')->select('BIODATA_OS.*', 'DEPT.DEPARTEMENT')->leftJoin('DEPT', 'DEPT.ID_DEPT', '=', 'BIODATA_OS.ID_DEPT');
+        $employees = DB::connection('sqlsrv')->table('BIODATA')->select('BIODATA.*', 'DEPT.DEPARTEMENT')->leftJoin('DEPT', 'DEPT.ID_DEPT', '=', 'BIODATA.ID_DEPT')->unionAll($outsourcees)->orderBy('DEPARTEMENT', 'ASC')->get();
         return view('karyawan.index', compact('employees'));
         // return view('karyawan.index');
     }
 
     public function show($id)
     {
-        $employees = DB::connection('sqlsrv')->table('BIODATA')->select('PKWT.*', 'DEPT.DEPARTEMENT', 'BIODATA.ID_DEPT')->leftJoin('DEPT', 'DEPT.ID_DEPT', '=', 'BIODATA.ID_DEPT')->leftJoin('PKWT', 'BIODATA.NPK', '=', 'PKWT.NPK')->where('BIODATA.NPK', '=', $id)->get();
+        $outsourcees = DB::connection('sqlsrv')->table('BIODATA_OS')->select('OUTSOURCE.*', 'DEPT.DEPARTEMENT', 'BIODATA_OS.ID_DEPT')->leftJoin('DEPT', 'DEPT.ID_DEPT', '=', 'BIODATA_OS.ID_DEPT')->leftJoin('OUTSOURCE', 'BIODATA_OS.NPK', '=', 'OUTSOURCE.NPK')->where('BIODATA_OS.NPK', '=', $id);
+        $employees = DB::connection('sqlsrv')->table('BIODATA')->select('PKWT.*', 'DEPT.DEPARTEMENT', 'BIODATA.ID_DEPT')->leftJoin('DEPT', 'DEPT.ID_DEPT', '=', 'BIODATA.ID_DEPT')->leftJoin('PKWT', 'BIODATA.NPK', '=', 'PKWT.NPK')->where('BIODATA.NPK', '=', $id)->unionAll($outsourcees)->get();
         return response()->json($employees);
     }
 
 
     public function batchQR()
     {
-        $employees = DB::connection('sqlsrv')->table('BIODATA')->select('BIODATA.*', 'DEPT.DEPARTEMENT')->leftJoin('DEPT', 'DEPT.ID_DEPT', '=', 'BIODATA.ID_DEPT')->orderBy('DEPARTEMENT', 'ASC')->get();
+        $outsourcees = DB::connection('sqlsrv')->table('BIODATA_OS')->select('BIODATA_OS.*', 'DEPT.DEPARTEMENT')->leftJoin('DEPT', 'DEPT.ID_DEPT', '=', 'BIODATA_OS.ID_DEPT');
+        $employees = DB::connection('sqlsrv')->table('BIODATA')->select('BIODATA.*', 'DEPT.DEPARTEMENT')->leftJoin('DEPT', 'DEPT.ID_DEPT', '=', 'BIODATA.ID_DEPT')->unionAll($outsourcees)->orderBy('DEPARTEMENT', 'ASC')->get();
 
         foreach ($employees as $employee) {
             $path = storage_path('public/qr/');
@@ -67,7 +70,8 @@ class KaryawanController extends Controller
 
     public function batchBarcode()
     {
-        $employees = DB::connection('sqlsrv')->table('BIODATA')->select('BIODATA.*', 'DEPT.DEPARTEMENT')->leftJoin('DEPT', 'DEPT.ID_DEPT', '=', 'BIODATA.ID_DEPT')->orderBy('DEPARTEMENT', 'ASC')->get();
+        $outsourcees = DB::connection('sqlsrv')->table('BIODATA_OS')->select('BIODATA_OS.*', 'DEPT.DEPARTEMENT')->leftJoin('DEPT', 'DEPT.ID_DEPT', '=', 'BIODATA_OS.ID_DEPT');
+        $employees = DB::connection('sqlsrv')->table('BIODATA')->select('BIODATA.*', 'DEPT.DEPARTEMENT')->leftJoin('DEPT', 'DEPT.ID_DEPT', '=', 'BIODATA.ID_DEPT')->unionAll($outsourcees)->orderBy('DEPARTEMENT', 'ASC')->get();
 
         foreach ($employees as $employee) {
             $path = storage_path('public/barcode/');
@@ -108,7 +112,8 @@ class KaryawanController extends Controller
 
     public function generateqr($id)
     {
-        $employees = DB::connection('sqlsrv')->table('BIODATA')->select('PKWT.*', 'DEPT.DEPARTEMENT', 'BIODATA.*')->leftJoin('DEPT', 'DEPT.ID_DEPT', '=', 'BIODATA.ID_DEPT')->leftJoin('PKWT', 'BIODATA.NPK', '=', 'PKWT.NPK')->where('BIODATA.NPK', '=', $id)->get();
+        $outsourcees = DB::connection('sqlsrv')->table('BIODATA_OS')->select('OUTSOURCE.*', 'DEPT.DEPARTEMENT', 'BIODATA_OS.ID_DEPT')->leftJoin('DEPT', 'DEPT.ID_DEPT', '=', 'BIODATA_OS.ID_DEPT')->leftJoin('OUTSOURCE', 'BIODATA_OS.NPK', '=', 'OUTSOURCE.NPK')->where('BIODATA_OS.NPK', '=', $id);
+        $employees = DB::connection('sqlsrv')->table('BIODATA')->select('PKWT.*', 'DEPT.DEPARTEMENT', 'BIODATA.ID_DEPT')->leftJoin('DEPT', 'DEPT.ID_DEPT', '=', 'BIODATA.ID_DEPT')->leftJoin('PKWT', 'BIODATA.NPK', '=', 'PKWT.NPK')->where('BIODATA.NPK', '=', $id)->unionAll($outsourcees)->get();
 
         // $path = storage_path('public/qr/single/');
         $path = storage_path('public/qr/');
