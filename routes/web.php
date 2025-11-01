@@ -10,6 +10,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\ScannerController;
 use App\Http\Controllers\SignaturePadController;
 use App\Http\Controllers\SpeechController;
+use App\Http\Controllers\SysLogController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -90,6 +91,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/karyawan/generateqr/{id}', [KaryawanController::class, 'generateqr'])->name('karyawan.generateqr');
     Route::get('/karyawan/batchQR', [KaryawanController::class, 'batchQR'])->name('karyawan.batchQR');
     Route::get('/karyawan/batchBarcode', [KaryawanController::class, 'batchBarcode'])->name('karyawan.batchBarcode');
+
+    Route::get('/syslog/index', [SysLogController::class, 'index'])->name('syslog.index');
+
 
     //Export
     Route::get('/canteen/export', [CanteenController::class, 'export_excel'])->name('canteen.export');

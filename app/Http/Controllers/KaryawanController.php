@@ -12,6 +12,9 @@ use Illuminate\Support\Facades\Crypt;
 use AgeekDev\Barcode\Facades\Barcode;
 use AgeekDev\Barcode\Enums\BarcodeType;
 use App\Models\BarcodeFiles;
+use App\Models\Syslog;
+use Illuminate\Support\Facades\Auth;
+use Jenssegers\Agent\Agent;
 
 class KaryawanController extends Controller
 {
@@ -61,6 +64,25 @@ class KaryawanController extends Controller
             //     'qr_path' => $path
             // ]);
         }
+
+        $username = Auth::user()->name;
+        $agent = new Agent();
+        $agent->setUserAgent(request()->userAgent());
+        $ipAddress = request()->ip();
+        $macAddress = get_mac_address($ipAddress);
+        $browser = $agent->browser();
+        $os = $agent->platform();
+        Syslog::create([
+            'username' => $username,
+            'activity' => 'Generate Batch QR Employee',
+            'menu' => 'Employee',
+            'log_date' => now(),
+            'ip_address' => $ipAddress,
+            'mac_address' => $macAddress,
+            'browser_type' => $browser,
+            'os' => $os,
+        ]);
+        
         Alert::success('Batch Successfully!', 'QR Code successfully generated!');
         return redirect('/karyawan/index');
     }
@@ -102,6 +124,25 @@ class KaryawanController extends Controller
             //     'barcode_path' => $path
             // ]);
         }
+
+        $username = Auth::user()->name;
+        $agent = new Agent();
+        $agent->setUserAgent(request()->userAgent());
+        $ipAddress = request()->ip();
+        $macAddress = get_mac_address($ipAddress);
+        $browser = $agent->browser();
+        $os = $agent->platform();
+        Syslog::create([
+            'username' => $username,
+            'activity' => 'Generate Batch Barcode Employee',
+            'menu' => 'Employee',
+            'log_date' => now(),
+            'ip_address' => $ipAddress,
+            'mac_address' => $macAddress,
+            'browser_type' => $browser,
+            'os' => $os,
+        ]);
+        
         Alert::success('Batch Successfully!', 'Barcode successfully generated!');
         return redirect('/karyawan/index');
     }
@@ -126,6 +167,25 @@ class KaryawanController extends Controller
             'qr_name' => $qrImageName,
             'qr_path' => $path
         ]);
+
+        $username = Auth::user()->name;
+        $agent = new Agent();
+        $agent->setUserAgent(request()->userAgent());
+        $ipAddress = request()->ip();
+        $macAddress = get_mac_address($ipAddress);
+        $browser = $agent->browser();
+        $os = $agent->platform();
+        Syslog::create([
+            'username' => $username,
+            'activity' => 'Generate QR Employee with NPK ' . $employees[0]->NPK . ' : ' . $employees[0]->NAMA_KARYAWAN,
+            'menu' => 'Employee',
+            'log_date' => now(),
+            'ip_address' => $ipAddress,
+            'mac_address' => $macAddress,
+            'browser_type' => $browser,
+            'os' => $os,
+        ]);
+
         Alert::success('Generate QR Successfully!', 'QR Code successfully generated!');
         return redirect('/karyawan/index');
     }

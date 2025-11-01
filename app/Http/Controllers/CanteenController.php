@@ -5,10 +5,13 @@ namespace App\Http\Controllers;
 use App\Exports\CanteensExport;
 use App\Models\Canteen;
 use App\Models\CanteenTwo;
+use App\Models\Syslog;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
+use Jenssegers\Agent\Agent;
 use Maatwebsite\Excel\Facades\Excel;
 use RealRashid\SweetAlert\Facades\Alert;
 use Yajra\DataTables\Facades\DataTables;
@@ -148,6 +151,24 @@ class CanteenController extends Controller
     public function export_excel(Request $request)
     {
         // dd($request->fromdate);
+        $username = Auth::user()->name;
+        $agent = new Agent();
+        $agent->setUserAgent(request()->userAgent());
+        $ipAddress = request()->ip();
+        $macAddress = get_mac_address($ipAddress);
+        $browser = $agent->browser();
+        $os = $agent->platform();
+        Syslog::create([
+            'username' => $username,
+            'activity' => 'export excel from ' . $request->fromdate . ' to ' . $request->todate . ' on canteen ' . $request->canteen_no,
+            'menu' => 'Canteen',
+            'log_date' => now(),
+            'ip_address' => $ipAddress,
+            'mac_address' => $macAddress,
+            'browser_type' => $browser,
+            'os' => $os,
+        ]);
+
         return Excel::download(new CanteensExport($request->fromdate, $request->todate, $request->canteen_no, $request->break), 'Canteen Data_' . $request->fromdate . '_' . $request->todate . '_Kantin ' . $request->canteen_no . '_' . $request->break . '.xlsx');
     }
 
