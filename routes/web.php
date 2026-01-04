@@ -98,3 +98,13 @@ Route::group(['middleware' => 'auth'], function () {
     //Export
     Route::get('/canteen/export', [CanteenController::class, 'export_excel'])->name('canteen.export');
 });
+
+// Livewire Scanner Routes (outside auth middleware - same as existing scanner routes)
+Route::get('/scanner/livewire/canteen1', \App\Http\Livewire\ScannerComponent::class)
+    ->defaults('canteenNo', 1)
+    ->name('scanner.livewire.canteen1');
+
+Route::get('/scanner/livewire/canteen2', \App\Http\Livewire\ScannerComponent::class)
+    ->defaults('canteenNo', 2)
+    ->name('scanner.livewire.canteen2');
+
