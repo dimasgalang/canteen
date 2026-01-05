@@ -26,155 +26,184 @@ class ScannerComponent extends Component
         $this->canteenNo = $canteenNo;
     }
 
+    public function updatedBarcode()
+    {
+        if (!empty(trim($this->barcode))) {
+            $this->processScan();
+        }
+    }
+
+    /**
+     * The main entry point for processing a scanned barcode.
+     */
     public function processScan()
     {
-        if (empty(trim($this->barcode))) {
+        $this->barcode = trim($this->barcode);
+        if (empty($this->barcode)) {
             return;
         }
 
         try {
-            $exploding = explode('_', $this->barcode);
-            $npk = $exploding[0] ?? '';
-            $name = $exploding[1] ?? '';
-            $dept = $exploding[2] ?? null;
+            // 1. Validate Barcode Format
+            $barcodeData = $this->validateBarcode();
+            if (!$barcodeData) return;
 
-            if (empty($npk) || empty($name)) {
-                $this->showFlash('danger', 'Invalid barcode format!');
-                $this->resetInput();
-                return;
-            }
+            // 2. Validate Time Windows
+            $timeData = $this->validateTimeSlot();
+            if (!$timeData) return;
 
-            // Time-based validation - Check FIRST to avoid unnecessary DB calls
-            $now = Carbon::now();
-            $today = Carbon::today();
-            
-            // Define time windows
-            $firstBreakStart = $today->copy()->setTime(11, 30, 0);
-            $firstBreakEnd = $today->copy()->setTime(14, 0, 0);
-            $overtimeStart = $today->copy()->setTime(16, 30, 0);
-            $overtimeEnd = $today->copy()->setTime(18, 0, 0);
+            // 3. Verify Employee Status (Cached)
+            if (!$this->isEmployeeActive($barcodeData['npk'], $barcodeData['name'])) return;
 
-            // Check if we are in a valid scanning period
-            $isFirstBreak = $now >= $firstBreakStart && $now < $firstBreakEnd;
-            $isOvertimeBreak = $now >= $overtimeStart && $now <= $overtimeEnd;
+            // 4. Check for Duplicate Scans
+            if ($this->hasRecentScan($barcodeData['npk'], $barcodeData['name'], $timeData)) return;
 
-            // Fail fast if outside valid times
-            if ($now < $firstBreakStart) {
-                $this->showFlash('warning', 'Belum masuk waktu istirahat ke-1!');
-                $this->resetInput();
-                return;
-            }
-
-            if ($now >= $firstBreakEnd && $now < $overtimeStart) {
-                $this->showFlash('warning', 'Belum masuk waktu istirahat ke-2!');
-                $this->resetInput();
-                return;
-            }
-
-            if ($now > $overtimeEnd) {
-                $this->showFlash('warning', 'Waktu istirahat sudah selesai!');
-                $this->resetInput();
-                return;
-            }
-
-            // Only check employee if time is valid
-            $checkEmployee = DB::connection('sqlsrv')
-                ->table('BIODATA')
-                ->where('NPK', '=', $npk)
-                ->exists(); // Use exists() instead of get() -> count() for speed
-
-            if (!$checkEmployee) {
-                $this->showFlash('danger', "Employee {$npk} - {$name} has been resign!");
-                $this->resetInput();
-                return;
-            }
-
-            // Determine model based on canteen number
-            $model = $this->canteenNo == 1 ? Canteen::class : CanteenTwo::class;
-            $otherCanteenName = $this->canteenNo == 1 ? 'canteen 2' : 'canteen 1';
-
-            // Check existing scans ONLY for the current active period
-            if ($isFirstBreak) {
-                $checkExistFirst = Canteen::where('created_at', '>=', $firstBreakStart)
-                    ->where('created_at', '<', $firstBreakEnd)
-                    ->where('npk', $npk)
-                    ->exists();
-
-                $checkExistSecond = CanteenTwo::where('created_at', '>=', $firstBreakStart)
-                    ->where('created_at', '<', $firstBreakEnd)
-                    ->where('npk', $npk)
-                    ->exists();
-
-                $thisCanteenExists = $this->canteenNo == 1 ? $checkExistFirst : $checkExistSecond;
-                $otherCanteenExists = $this->canteenNo == 1 ? $checkExistSecond : $checkExistFirst;
-
-                if (!$thisCanteenExists && !$otherCanteenExists) {
-                    $this->createScanRecord($model, $npk, $name, $dept);
-                    $this->showFlash('success', "Employee {$npk} - {$name} successfully scanned!");
-                    $this->emit('refreshTable');
-                    $this->resetInput();
-                    return;
-                }
-                
-                if ($otherCanteenExists) {
-                    $this->showFlash('danger', "Employee {$npk} - {$name} already scanned in {$otherCanteenName}!");
-                    $this->resetInput();
-                    return;
-                }
-                
-                $this->showFlash('danger', "Employee {$npk} - {$name} already scanned!");
-                $this->resetInput();
-                return;
-            }
-
-            if ($isOvertimeBreak) {
-                $checkLemburFirst = Canteen::where('created_at', '>=', $overtimeStart)
-                    ->where('created_at', '<', $overtimeEnd)
-                    ->where('npk', $npk)
-                    ->exists();
-
-                $checkLemburSecond = CanteenTwo::where('created_at', '>=', $overtimeStart)
-                    ->where('created_at', '<', $overtimeEnd)
-                    ->where('npk', $npk)
-                    ->exists();
-
-                $thisCanteenLembur = $this->canteenNo == 1 ? $checkLemburFirst : $checkLemburSecond;
-                $otherCanteenLembur = $this->canteenNo == 1 ? $checkLemburSecond : $checkLemburFirst;
-
-                if (!$thisCanteenLembur && !$otherCanteenLembur) {
-                    $this->createScanRecord($model, $npk, $name, $dept);
-                    $this->showFlash('success', "Employee {$npk} - {$name} successfully scanned!");
-                    $this->emit('refreshTable');
-                    $this->resetInput();
-                    return;
-                }
-                
-                if ($otherCanteenLembur) {
-                    $this->showFlash('danger', "Employee {$npk} - {$name} already scanned in {$otherCanteenName}!");
-                    $this->resetInput();
-                    return;
-                }
-                
-                $this->showFlash('danger', "Employee {$npk} - {$name} already scanned!");
-                $this->resetInput();
-                return;
-            }
+            // 5. Success: Save and Broadcast
+            $this->saveScanRecord($barcodeData);
+            $this->handleSuccess($barcodeData['npk'], $barcodeData['name']);
 
         } catch (Exception $e) {
-            $this->showFlash('danger', 'Invalid input, please check the barcode data!');
+            $this->showFlash('danger', 'Error: ' . $e->getMessage());
             $this->resetInput();
         }
     }
 
-    private function createScanRecord($model, $npk, $name, $dept)
+    /**
+     * Ensures the barcode has the correct NPK_Name_Dept format.
+     */
+    private function validateBarcode()
     {
-        $model::create([
+        if (!str_contains($this->barcode, '_')) {
+            if ($this->barcode !== '') {
+                $this->showFlash('danger', 'Invalid barcode format! Missing underscore.');
+                $this->resetInput();
+            }
+            return null;
+        }
+
+        $parts = explode('_', $this->barcode);
+        $data = [
+            'npk'  => $parts[0] ?? '',
+            'name' => $parts[1] ?? '',
+            'dept' => $parts[2] ?? '',
+        ];
+
+        if (empty($data['npk']) || empty($data['name'])) {
+            $this->showFlash('danger', 'Invalid barcode format! NPK and Name are required.');
+            $this->resetInput();
+            return null;
+        }
+
+        return $data;
+    }
+
+    /**
+     * Checks if the current time is within allowed scanning windows.
+     */
+    private function validateTimeSlot()
+    {
+        $now = Carbon::now();
+        $today = Carbon::today();
+        
+        $slots = [
+            'lunch'  => ['start' => $today->copy()->setTime(11, 30, 0), 'end' => $today->copy()->setTime(14, 0, 0)],
+            'dinner' => ['start' => $today->copy()->setTime(16, 30, 0), 'end' => $today->copy()->setTime(18, 0, 0)],
+        ];
+
+        if ($now < $slots['lunch']['start']) {
+            $this->showFlash('warning', 'Belum masuk waktu istirahat ke-1!');
+            $this->resetInput();
+            return null;
+        }
+
+        if ($now >= $slots['lunch']['end'] && $now < $slots['dinner']['start']) {
+            $this->showFlash('warning', 'Belum masuk waktu istirahat ke-2!');
+            $this->resetInput();
+            return null;
+        }
+
+        if ($now > $slots['dinner']['end']) {
+            $this->showFlash('warning', 'Waktu scanning sudah berakhir!');
+            $this->resetInput();
+            return null;
+        }
+
+        $isLunch = $now->between($slots['lunch']['start'], $slots['lunch']['end']);
+        return [
+            'start' => $isLunch ? $slots['lunch']['start'] : $slots['dinner']['start'],
+            'end'   => $isLunch ? $slots['lunch']['end']   : $slots['dinner']['end'],
+            'now'   => $now
+        ];
+    }
+
+    /**
+     * Verifies if the employee is still active in the BIODATA system.
+     */
+    private function isEmployeeActive($npk, $name)
+    {
+        $exists = \Illuminate\Support\Facades\Cache::remember("emp_exists_{$npk}", 86400, function() use ($npk) {
+            return DB::connection('sqlsrv')->table('BIODATA')->where('NPK', $npk)->exists();
+        });
+
+        if (!$exists) {
+            $this->showFlash('danger', "Employee {$npk} - {$name} has been resign!");
+            $this->resetInput();
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Prevents multiple scans within the same time window across all canteens.
+     */
+    private function hasRecentScan($npk, $name, $timeData)
+    {
+        $range = [$timeData['start'], $timeData['end']];
+        
+        $alreadyScanned = DB::table('canteen')->where('npk', $npk)->whereBetween('created_at', $range)->exists() ||
+                         DB::table('canteen_twos')->where('npk', $npk)->whereBetween('created_at', $range)->exists();
+
+        if ($alreadyScanned) {
+            $this->showFlash('danger', "Employee {$npk} - {$name} already scanned!");
+            $this->resetInput();
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Persists the scan record to the database.
+     */
+    private function saveScanRecord($data)
+    {
+        $table = $this->canteenNo == 1 ? 'canteen' : 'canteen_twos';
+        $now = Carbon::now();
+
+        DB::table($table)->insert([
             'canteen_no' => $this->canteenNo,
-            'npk' => $npk,
-            'name' => $name,
-            'dept' => $dept,
-            'date' => Carbon::now()
+            'npk'        => $data['npk'],
+            'name'       => $data['name'],
+            'dept'       => $data['dept'],
+            'date'       => $now,
+            'created_at' => $now,
+            'updated_at' => $now
         ]);
+    }
+
+    /**
+     * Handles UI feedback and real-time broadcasting after a successful scan.
+     */
+    private function handleSuccess($npk, $name)
+    {
+        $this->showFlash('success', "Employee {$npk} - {$name} successfully scanned!");
+        
+        // Broadcast for multi-device sync
+        broadcast(new \App\Events\ScanProcessed($this->canteenNo));
+        
+        $this->emit('refreshTable');
+        $this->resetInput();
     }
 
     private function showFlash($type, $message)

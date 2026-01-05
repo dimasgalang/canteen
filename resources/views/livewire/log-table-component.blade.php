@@ -1,12 +1,19 @@
-<div class="card shadow mb-4" wire:poll.10s>
+<div class="card shadow-lg border-0 mb-4">
     <!-- Card Header with Stats -->
-    <div class="card-header py-3">
+    <div class="card-header py-3 bg-white border-bottom-0">
         <div class="row align-items-center">
             <div class="col-md-6">
                 <h6 class="m-0 font-weight-bold text-primary">
-                    <i class="fas fa-table mr-2"></i>
-                    Data Scanning Canteen {{ $canteenNo }}
-                    <span class="badge badge-success ml-2">{{ $totalCount }} hari ini</span>
+                    <i class="fas fa-stream mr-2"></i>
+                    DATA CANTEEN {{ $canteenNo }}
+                    <span class="ml-2 d-inline-flex align-items-center">
+                        <span class="position-relative d-inline-flex">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-success opacity-75" style="width: 10px; height: 10px; background: #28a745; border-radius: 50%; display: inline-block;"></span>
+                            <span class="relative inline-flex rounded-full h-3 w-3 bg-success" style="width: 10px; height: 10px; background: #218838; border-radius: 50%; display: inline-block; position: absolute; top: 0; left: 0;"></span>
+                        </span>
+                        <!-- <span class="badge badge-success border-0 px-2 ml-1" style="font-size: 0.7rem; letter-spacing: 1px;">LIVE</span> -->
+                    </span>
+                    <span class="badge badge-light shadow-sm ml-2 text-primary border">{{ $totalCount }} Today</span>
                 </h6>
             </div>
             <div class="col-md-6">
@@ -59,9 +66,12 @@
                         <th width="120">Waktu Scan</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody x-data>
                     @forelse($logs as $index => $log)
-                    <tr>
+                    <tr x-show="true" 
+                        x-transition:enter="transition ease-out duration-500"
+                        x-transition:enter-start="opacity-0 transform -translate-y-4"
+                        x-transition:enter-end="opacity-100 transform translate-y-0">
                         <td class="text-center">
                             {{ ($logs->currentPage() - 1) * $logs->perPage() + $index + 1 }}
                         </td>

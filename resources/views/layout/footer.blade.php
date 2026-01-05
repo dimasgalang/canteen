@@ -31,5 +31,22 @@
 <!-- Custom scripts for all pages-->
 <script src="{{asset('js/sb-admin-2.min.js')}}"></script>
 
+<!-- Pusher & Echo Implementation -->
+<script src="https://js.pusher.com/7.2/pusher.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/laravel-echo@1.15.3/dist/echo.iife.js"></script>
+
+<script>
+    window.Pusher = Pusher;
+    window.Echo = new Echo({
+        broadcaster: 'pusher',
+        key: "{{ env('PUSHER_APP_KEY') }}",
+        cluster: "{{ env('PUSHER_APP_CLUSTER') }}",
+        forceTLS: true
+    });
+</script>
+
+@livewireScripts
+@stack('scripts')
+
 <!-- Page level plugins -->
 <script src="{{asset('vendor/chart.js/Chart.min.js')}}"></script>

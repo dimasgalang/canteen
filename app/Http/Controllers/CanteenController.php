@@ -91,8 +91,11 @@ class CanteenController extends Controller
 
     public function showcanteen1()
     {
-        $canteens = Canteen::orderBy('created_at', 'desc')->where('date', '=', $this->dateNow->toDateString())->where('canteen_no', '=', '1')->get();
-        return DataTables::of($canteens)
+        $query = Canteen::query()
+            ->where('date', '=', $this->dateNow->toDateString())
+            ->where('canteen_no', '=', '1');
+            
+        return DataTables::of($query)
             ->addIndexColumn()
             ->addColumn('created_at_formated', function ($row) {
                 return date('d-m-Y H:i:s', strtotime($row->created_at));
@@ -104,8 +107,11 @@ class CanteenController extends Controller
 
     public function showcanteen2()
     {
-        $canteens = CanteenTwo::orderBy('created_at', 'desc')->where('date', '=', $this->dateNow->toDateString())->where('canteen_no', '=', '2')->get();
-        return DataTables::of($canteens)
+        $query = CanteenTwo::query()
+            ->where('date', '=', $this->dateNow->toDateString())
+            ->where('canteen_no', '=', '2');
+            
+        return DataTables::of($query)
             ->addIndexColumn()
             ->addColumn('created_at_formated', function ($row) {
                 return date('d-m-Y H:i:s', strtotime($row->created_at));

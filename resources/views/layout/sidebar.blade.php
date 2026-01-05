@@ -111,6 +111,10 @@
             <div class="bg-white py-2 collapse-inner rounded">
                 <a class="collapse-item" href="{{ route('scanner.barcodescanning1') }}">Barcode Scanner 1</a>
                 <a class="collapse-item" href="{{ route('scanner.barcodescanning2') }}">Barcode Scanner 2</a>
+
+                <!-- Kantin 1 Livewire -->
+                 <a class="collapse-item" href="{{ route('scanner.livewire.canteen1') }}">Livewire Scanner 1</a>
+                 <a class="collapse-item" href="{{ route('scanner.livewire.canteen2') }}">Livewire Scanner 2</a>
             </div>
             @endif
         </div>

@@ -14,9 +14,12 @@ class LogTableComponent extends Component
 
     public $canteenNo;
     public $search = '';
-    public $perPage = 15;
+    public $perPage = 10;
 
-    protected $listeners = ['refreshTable' => '$refresh'];
+    protected $listeners = [
+        'refreshTable' => '$refresh',
+        'echo:canteen,ScanProcessed' => '$refresh'
+    ];
     protected $paginationTheme = 'bootstrap';
 
     // Reset pagination when search changes
@@ -35,17 +38,28 @@ class LogTableComponent extends Component
         $this->resetPage();
     }
 
-    public function getTotalCountProperty()
+    /**
+     * Get the correct model based on canteen number.
+     */
+    private function getCanteenModel()
     {
-        $model = $this->canteenNo == 1 ? Canteen::class : CanteenTwo::class;
-        return $model::whereDate('created_at', Carbon::today())->count();
+        return $this->canteenNo == 1 ? Canteen::class : CanteenTwo::class;
     }
 
+    /**
+     * Computed property for total scans today.
+     */
+    public function getTotalCountProperty()
+    {
+        return $this->getCanteenModel()::whereDate('created_at', Carbon::today())->count();
+    }
+
+    /**
+     * Render the component with filtered and paginated logs.
+     */
     public function render()
     {
-        $model = $this->canteenNo == 1 ? Canteen::class : CanteenTwo::class;
-        
-        $logs = $model::whereDate('created_at', Carbon::today())
+        $logs = $this->getCanteenModel()::whereDate('created_at', Carbon::today())
             ->when($this->search, function($query) {
                 $query->where(function($q) {
                     $q->where('npk', 'like', '%'.$this->search.'%')
