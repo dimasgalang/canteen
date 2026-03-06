@@ -61,7 +61,7 @@
                         <th width="60">No</th>
                         <th>NPK</th>
                         <th>Nama Karyawan</th>
-                        <th>Department</th>
+                        {{-- <th>Department</th> --}}
                         <th>Canteen</th>
                         <th width="120">Waktu Scan</th>
                     </tr>
@@ -79,7 +79,7 @@
                             <span class="font-weight-bold text-primary">{{ $log->npk }}</span>
                         </td>
                         <td>{{ $log->name }}</td>
-                        <td>{{ $log->dept ?? '-' }}</td>
+                        {{-- <td>{{ $log->dept ?? '-' }}</td> --}}
                         <td class="text-center">
                             <span class="badge badge-info">{{ $log->canteen_no }}</span>
                         </td>

@@ -56,7 +56,7 @@
                                     <div class="col mr-2">
                                         <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                                             Total Scanning Today</div>
-                                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ (count($totalScanning)) }}</div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ count($totalCanteen1) + count($totalCanteen2) }}</div>
                                     </div>
                                     <div class="col-auto">
                                         <i class="fas fa-scan fa-2x text-gray-300"></i>

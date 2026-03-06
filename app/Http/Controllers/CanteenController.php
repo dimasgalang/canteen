@@ -93,7 +93,8 @@ class CanteenController extends Controller
     {
         $query = Canteen::query()
             ->where('date', '=', $this->dateNow->toDateString())
-            ->where('canteen_no', '=', '1');
+            ->where('canteen_no', '=', '1')
+            ->orderBy('created_at', 'desc')->get();
             
         return DataTables::of($query)
             ->addIndexColumn()
@@ -109,7 +110,8 @@ class CanteenController extends Controller
     {
         $query = CanteenTwo::query()
             ->where('date', '=', $this->dateNow->toDateString())
-            ->where('canteen_no', '=', '2');
+            ->where('canteen_no', '=', '2')
+            ->orderBy('created_at', 'desc')->get();
             
         return DataTables::of($query)
             ->addIndexColumn()
@@ -175,7 +177,9 @@ class CanteenController extends Controller
             'os' => $os,
         ]);
 
-        return Excel::download(new CanteensExport($request->fromdate, $request->todate, $request->canteen_no, $request->break), 'Canteen Data_' . $request->fromdate . '_' . $request->todate . '_Kantin ' . $request->canteen_no . '_' . $request->break . '.xlsx');
+        $canteen_name = $request->canteen_no == '1' ? 'Diamond Chickres' : 'Pawon Ndoro Ayu';
+
+        return Excel::download(new CanteensExport($request->fromdate, $request->todate, $request->canteen_no, $request->break), 'Canteen Data_' . $request->fromdate . '_' . $request->todate . '_Kantin ' . $canteen_name . '_' . $request->break . '.xlsx');
     }
 
     // public function synchronize(Request $request)

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Buyer;
 use App\Models\Canteen;
+use App\Models\CanteenTwo;
 use App\Models\LogCiiper;
 use App\Models\OrderMaster;
 use App\Models\ProductionPlanning;
@@ -39,11 +40,10 @@ class HomeController extends Controller
 
     public function index()
     {
-        $totalScanning = Canteen::select('*')->where('date', '=', Carbon::today()->toDateString())->get();
-        $totalCanteen1 = Canteen::select('*')->where('date', '=', Carbon::today()->toDateString())->where('canteen_no','=','1')->get();
-        $totalCanteen2 = Canteen::select('*')->where('date', '=', Carbon::today()->toDateString())->where('canteen_no','=','2')->get();
+        $totalCanteen1 = Canteen::select('*')->where('date', '=', Carbon::today()->toDateString())->where('canteen_no', '=', '1')->get();
+        $totalCanteen2 = CanteenTwo::select('*')->where('date', '=', Carbon::today()->toDateString())->where('canteen_no', '=', '2')->get();
         // dd($totalScanning);
         // return view('home', compact('totalapproved','totalpending','totaldocument','totaluser'));
-        return view('home',compact('totalScanning','totalCanteen1','totalCanteen2'));
+        return view('home', compact('totalCanteen1', 'totalCanteen2'));
     }
 }

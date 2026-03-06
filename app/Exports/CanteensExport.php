@@ -79,7 +79,7 @@ class CanteensExport implements WithHeadings, WithStrictNullComparison, WithEven
             $canteens->id,
             $canteens->npk,
             $canteens->name,
-            $canteens->canteen_no,
+            $canteens->canteen_no == '1' ? 'Diamond Chickres' : 'Pawon Ndoro Ayu',
             $canteens->date,
             $canteens->created_at,
         ];
