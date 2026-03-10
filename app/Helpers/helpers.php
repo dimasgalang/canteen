@@ -9,7 +9,7 @@ if (! function_exists('get_mac_address')) {
      */
     function get_mac_address(?string $ip = null): ?string
     {
-        if($ip !== $_SERVER['SERVER_ADDR']) {
+        if($ip !== '192.168.1.34') {
             $macAddr = false;
             $arp = `arp -a $ip`;
             $lines = explode("\n", $arp);
