@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Redirect;
 use Jenssegers\Agent\Agent;
 use Maatwebsite\Excel\Facades\Excel;
 use RealRashid\SweetAlert\Facades\Alert;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Yajra\DataTables\Facades\DataTables;
 
 class CanteenController extends Controller
@@ -50,7 +51,7 @@ class CanteenController extends Controller
     public function showcanteen(Request $request)
     {
         if ($request->ajax()) {
-            if($request->canteen_no == '1') {
+            if ($request->canteen_no == '1') {
                 $canteens = Canteen::take(100);
             } else {
                 $canteens = CanteenTwo::take(100);
@@ -95,7 +96,7 @@ class CanteenController extends Controller
             ->where('date', '=', $this->dateNow->toDateString())
             ->where('canteen_no', '=', '1')
             ->orderBy('created_at', 'desc')->get();
-            
+
         return DataTables::of($query)
             ->addIndexColumn()
             ->addColumn('created_at_formated', function ($row) {
@@ -112,7 +113,7 @@ class CanteenController extends Controller
             ->where('date', '=', $this->dateNow->toDateString())
             ->where('canteen_no', '=', '2')
             ->orderBy('created_at', 'desc')->get();
-            
+
         return DataTables::of($query)
             ->addIndexColumn()
             ->addColumn('created_at_formated', function ($row) {
@@ -156,6 +157,41 @@ class CanteenController extends Controller
         // return Redirect::back();
     }
 
+    public function createManual()
+    {
+        $outsources = \App\Models\Outsource::where('void', 'false')->orWhereNull('void')->get();
+        return view('canteen.create-manual', compact('outsources'));
+    }
+
+    public function storeManual(Request $request)
+    {
+        foreach ($request->data as $item) {
+            try {
+                $data = [
+                    'canteen_no' => $item['canteen_no'],
+                    'npk' => $item['npk'],
+                    'name' => $item['name'],
+                    'dept' => $item['dept'],
+                    'date' => $item['date'],
+                    'created_at' => Carbon::parse($item['date'])->format('Y-m-d H:i:s'),
+                    'updated_at' => Carbon::now()
+                ];
+
+                if ($item['canteen_no'] == 1) {
+                    Canteen::create($data);
+                } else {
+                    CanteenTwo::create($data);
+                }
+            } catch (\Exception $e) {
+                Alert::error('Error', "Failed to insert data.");
+                return redirect()->route('canteen.index');
+            }
+        }
+
+        Alert::success('Success', "Data successfully inserted!");
+        return redirect()->route('canteen.index');
+    }
+
     public function export_excel(Request $request)
     {
         // dd($request->fromdate);
@@ -180,6 +216,86 @@ class CanteenController extends Controller
         $canteen_name = $request->canteen_no == '1' ? 'Diamond Chickres' : 'Pawon Ndoro Ayu';
 
         return Excel::download(new CanteensExport($request->fromdate, $request->todate, $request->canteen_no, $request->break), 'Canteen Data_' . $request->fromdate . '_' . $request->todate . '_Kantin ' . $canteen_name . '_' . $request->break . '.xlsx');
+    }
+
+    public function report_canteen(Request $request)
+    {
+        $fromdate  = $request->fromdate;
+        $todate    = $request->todate;
+        $canteenNo = $request->canteen_no;
+        $break     = $request->break;
+        $price     = 7000;
+
+        // Build base query — same as export excel filter logic
+        $model = $canteenNo == '1' ? Canteen::class : CanteenTwo::class;
+
+        $query = $model::query()
+            ->selectRaw("date, 
+                SUM(CASE WHEN npk LIKE 'C-%' THEN 1 ELSE 0 END) as jumlah_scan, 
+                SUM(CASE WHEN npk LIKE 'O-%' THEN 1 ELSE 0 END) as tidak_scan")
+            ->where('canteen_no', $canteenNo)
+            ->where('date', '>=', $fromdate)
+            ->where('date', '<=', $todate);
+
+        // Apply break time filter
+        if ($break === 'normal') {
+            $query->whereRaw("CAST(created_at AS TIME) BETWEEN '10:00:00' AND '15:59:59'");
+        } else {
+            $query->whereRaw("CAST(created_at AS TIME) BETWEEN '16:00:00' AND '23:59:59'");
+        }
+
+        $records = $query->groupBy('date')->orderBy('date')->get()->keyBy('date');
+
+        // Pre-fill all dates between fromdate and todate
+        $startDate = Carbon::parse($fromdate);
+        $endDate   = Carbon::parse($todate);
+        $diffInDays = $startDate->diffInDays($endDate);
+
+        $allDates = collect();
+        for ($i = 0; $i <= $diffInDays; $i++) {
+            $currentDate = $startDate->copy()->addDays($i)->format('Y-m-d');
+
+            $record     = $records->get($currentDate);
+            $jumlahScan = $record ? (int) $record->jumlah_scan : 0;
+            $tidakScan  = $record ? (int) $record->tidak_scan : 0;
+            $jumlah     = $jumlahScan + $tidakScan;
+            $nominal    = $jumlah * $price;
+
+            $allDates->push([
+                'hari_tanggal' => Carbon::parse($currentDate)->locale('id')->isoFormat('dddd, D MMMM Y'),
+                'jumlah_scan'  => $jumlahScan,
+                'tidak_scan'   => $tidakScan,
+                'jumlah'       => $jumlah,
+                'nominal'      => $nominal,
+            ]);
+        }
+
+        // Split into 2 halves (up to 7 days each, assuming typical 14-day period)
+        $week1 = $allDates->slice(0, 7)->values();
+        $week2 = $allDates->slice(7, 7)->values();
+
+        // Determine periode labels
+        $canteenName = $canteenNo == '1' ? 'Diamond Chickres' : 'Pawon Ndoro Ayu';
+
+        $periode1 = $week1->isNotEmpty()
+            ? Carbon::parse($fromdate)->locale('id')->isoFormat('D MMMM Y') . ' – ' .
+            Carbon::parse($fromdate)->addDays(6)->locale('id')->isoFormat('D MMMM Y')
+            : '';
+
+        $periode2 = $week2->isNotEmpty()
+            ? Carbon::parse($fromdate)->addDays(7)->locale('id')->isoFormat('D MMMM Y') . ' – ' .
+            Carbon::parse($todate)->locale('id')->isoFormat('D MMMM Y')
+            : '';
+
+        $pdf = Pdf::loadView('template.report-canteen-portrait', [
+            'kantin'   => $canteenName,
+            'periode1' => $periode1,
+            'periode2' => $periode2,
+            'week1'    => $week1->toArray(),
+            'week2'    => $week2->toArray(),
+        ])->setPaper('a4', 'portrait');
+
+        return $pdf->download('Report_Kantin_' . $canteenName . '_' . $fromdate . '_' . $todate . '.pdf');
     }
 
     // public function synchronize(Request $request)

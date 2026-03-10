@@ -12,6 +12,7 @@ use App\Http\Controllers\SignaturePadController;
 use App\Http\Controllers\SpeechController;
 use App\Http\Controllers\SysLogController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\OutsourceController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -75,6 +76,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/canteen/index', [CanteenController::class, 'index'])->name('canteen.index');
     Route::get('/canteen/showcanteen', [CanteenController::class, 'showcanteen'])->name('canteen.showcanteen');
     Route::post('/canteen/synchronize', [CanteenController::class, 'synchronize'])->name('canteen.synchronize');
+    Route::get('/canteen/create-manual', [CanteenController::class, 'createManual'])->name('canteen.createManual');
+    Route::post('/canteen/store-manual', [CanteenController::class, 'storeManual'])->name('canteen.storeManual');
 
     //Scanner
     Route::get('/scanner/index', [ScannerController::class, 'index'])->name('scanner.index');
@@ -94,9 +97,20 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::get('/syslog/index', [SysLogController::class, 'index'])->name('syslog.index');
 
+    //Outsource
+    Route::get('/outsource/index', [OutsourceController::class, 'index'])->name('outsource.index');
+    Route::get('/outsource/get-npk', [OutsourceController::class, 'getNpk'])->name('outsource.getNpk');
+    Route::get('/outsource/create', [OutsourceController::class, 'create'])->name('outsource.create');
+    Route::post('/outsource/store', [OutsourceController::class, 'store'])->name('outsource.store');
+    Route::get('/outsource/edit/{id}', [OutsourceController::class, 'edit'])->name('outsource.edit');
+    Route::post('/outsource/update/{id}', [OutsourceController::class, 'update'])->name('outsource.update');
+    Route::get('/outsource/delete/{id}', [OutsourceController::class, 'delete'])->name('outsource.delete');
 
     //Export
     Route::get('/canteen/export', [CanteenController::class, 'export_excel'])->name('canteen.export');
+
+    // template
+    Route::get('/template/report-canteen', [CanteenController::class, 'report_canteen'])->name('template.report-canteen');
 });
 
 // Livewire Scanner Routes (outside auth middleware - same as existing scanner routes)
@@ -107,4 +121,3 @@ Route::get('/scanner/livewire/canteen1', \App\Http\Livewire\ScannerComponent::cl
 Route::get('/scanner/livewire/canteen2', \App\Http\Livewire\ScannerComponent::class)
     ->defaults('canteenNo', 2)
     ->name('scanner.livewire.canteen2');
-

@@ -72,6 +72,7 @@
         <div id="collapseEmployee" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <a class="collapse-item" href="{{ route('karyawan.index') }}">Data Employee</a>
+                <a class="collapse-item" href="{{ route('outsource.index') }}">Data Outsource</a>
             </div>
         </div>
     </li>

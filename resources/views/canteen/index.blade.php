@@ -36,6 +36,7 @@
                                         <br>
                                         <button id='filter-data' type="button" class="btn btn-primary">Filter</button>
                                         <button id='export' type="submit" class="btn btn-success">Export To Excel</button>
+                                        <button id='export-pdf' type="button" class="btn btn-danger">Export To PDF</button>
                                     </div>
                                     <div class="col-xl-3 col-md-6 mb-4">
                                         <div>
@@ -166,7 +167,26 @@
         });
         $('#filter-data').click(function(){
             tableCanteen.draw();
-            // console.log("Clicked");
+        });
+
+        $('#export-pdf').click(function(){
+            var fromdate  = document.getElementById('fromdate').value;
+            var todate    = document.getElementById('todate').value;
+            var canteenNo = document.getElementById('canteen_no').value;
+            var breakVal  = document.getElementById('break').value;
+
+            if (!fromdate || !todate || !canteenNo || !breakVal) {
+                alert('Please fill in all filter fields (From Date, To Date, Canteen, Break) before exporting PDF.');
+                return;
+            }
+
+            var url = '{{ route("template.report-canteen") }}'
+                + '?fromdate=' + fromdate
+                + '&todate=' + todate
+                + '&canteen_no=' + canteenNo
+                + '&break=' + breakVal;
+
+            window.open(url, '_blank');
         });
         // setInterval( function () {
         //     tableCanteen.ajax.reload();
