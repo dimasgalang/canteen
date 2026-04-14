@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Canteen;
 use App\Models\CanteenTwo;
+use App\Models\DuplicateScanner;
 use App\Models\QRCode;
 use App\Models\QRFiles;
 use Carbon\Carbon;
@@ -155,6 +156,14 @@ class ScannerController extends Controller
                         }
                        
                     } elseif ($checkExistSecond) {
+                        DuplicateScanner::firstOrCreate([
+                            'npk' => $npk,
+                            'already_scan_canteen_number' => 2,
+                            'date' => Carbon::today()
+                        ], [
+                            'name' => $name,
+                            'need_to_scan_canteen_number' => 1,
+                        ]);
                         Alert::error('Alert!', 'Employee ' . $npk . ' - ' . $name . ' already scanned in canteen 2!')->autoClose(500);
                     } else {
                         Alert::error('Alert!', 'Employee ' . $npk . ' - ' . $name . ' already scanned!')->autoClose(500);
@@ -227,6 +236,14 @@ class ScannerController extends Controller
                         }
                        
                     } elseif ($checkExistFirst) {
+                        DuplicateScanner::firstOrCreate([
+                            'npk' => $npk,
+                            'already_scan_canteen_number' => 1,
+                            'date' => Carbon::today()
+                        ], [
+                            'name' => $name,
+                            'need_to_scan_canteen_number' => 2,
+                        ]);
                         Alert::error('Alert!', 'Employee ' . $npk . ' - ' . $name . ' already scanned in canteen 1!')->autoClose(500);
                     } else {
                         Alert::error('Alert!', 'Employee ' . $npk . ' - ' . $name . ' already scanned!')->autoClose(500);

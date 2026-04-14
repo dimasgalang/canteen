@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ApprovalController;
 use App\Http\Controllers\CanteenController;
+use App\Http\Controllers\DuplicateScannerController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\LoginController;
@@ -111,6 +112,12 @@ Route::group(['middleware' => 'auth'], function () {
 
     // template
     Route::get('/template/report-canteen', [CanteenController::class, 'report_canteen'])->name('template.report-canteen');
+
+    //Duplicate Scanner
+    Route::get('/scanner/duplicate', [DuplicateScannerController::class, 'index'])->name('scanner.duplicate');
+    Route::get('/scanner/duplicate-data', [DuplicateScannerController::class, 'data'])->name('scanner.duplicateData');
+    Route::post('/scanner/duplicate/bulk-move', [DuplicateScannerController::class, 'bulkMove'])->name('scanner.duplicate.bulkMove');
+    Route::delete('/scanner/duplicate/{id}', [DuplicateScannerController::class, 'destroy'])->name('scanner.duplicate.destroy');
 });
 
 // Livewire Scanner Routes (outside auth middleware - same as existing scanner routes)
