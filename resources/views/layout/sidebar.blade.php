@@ -19,64 +19,65 @@
             <span>Dashboard</span></a>
     </li>
     @if($auth == true)
-    @if($roleusers[0]->rolename == 'Admin')
-    <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUser"
-            aria-expanded="true" aria-controls="collapseUser">
-            <i class="fas fa-fw fa-user"></i>
-            <span>User</span>
-        </a>
-        <div id="collapseUser" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-            <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item" href="{{ route('user.index') }}">Daftar User</a>
-                <a class="collapse-item" href="{{ route('role.index') }}">Daftar Role</a>
-            </div>
-        </div>
-    </li>
+        @if($roleusers[0]->rolename == 'Admin')
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUser" aria-expanded="true"
+                    aria-controls="collapseUser">
+                    <i class="fas fa-fw fa-user"></i>
+                    <span>User</span>
+                </a>
+                <div id="collapseUser" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" href="{{ route('user.index') }}">Daftar User</a>
+                        <a class="collapse-item" href="{{ route('role.index') }}">Daftar Role</a>
+                    </div>
+                </div>
+            </li>
 
-    <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseSyslogs"
-            aria-expanded="true" aria-controls="collapseSyslogs">
-            <i class="fas fa-fw fa-file"></i>
-            <span>SysLogs</span>
-        </a>
-        <div id="collapseSyslogs" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-            <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item" href="{{ route('syslog.index') }}">System Logs</a>
-            </div>
-        </div>
-    </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseSyslogs"
+                    aria-expanded="true" aria-controls="collapseSyslogs">
+                    <i class="fas fa-fw fa-file"></i>
+                    <span>SysLogs</span>
+                </a>
+                <div id="collapseSyslogs" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" href="{{ route('syslog.index') }}">System Logs</a>
+                    </div>
+                </div>
+            </li>
 
-    <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTools"
-            aria-expanded="true" aria-controls="collapseTools">
-            <i class="fas fa-fw fa-cog"></i>
-            <span>Tools</span>
-        </a>
-        <div id="collapseTools" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-            <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item" href="chrome://flags/#unsafely-treat-insecure-origin-as-secure" target="_blank">Enable Camera</a>
-            </div>
-        </div>
-    </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTools" aria-expanded="true"
+                    aria-controls="collapseTools">
+                    <i class="fas fa-fw fa-cog"></i>
+                    <span>Tools</span>
+                </a>
+                <div id="collapseTools" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" href="chrome://flags/#unsafely-treat-insecure-origin-as-secure"
+                            target="_blank">Enable Camera</a>
+                    </div>
+                </div>
+            </li>
+        @endif
     @endif
-    @endif
-    
+
     @if($auth == true)
-    <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseEmployee"
-            aria-expanded="true" aria-controls="collapseEmployee">
-            <i class="fas fa-fw fa-users"></i>
-            <span>Employee</span>
-        </a>
-        <div id="collapseEmployee" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-            <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item" href="{{ route('karyawan.index') }}">Data Employee</a>
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseEmployee"
+                aria-expanded="true" aria-controls="collapseEmployee">
+                <i class="fas fa-fw fa-users"></i>
+                <span>Employee</span>
+            </a>
+            <div id="collapseEmployee" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <a class="collapse-item" href="{{ route('karyawan.index') }}">Data Employee</a>
+                </div>
             </div>
-        </div>
-    </li>
+        </li>
     @endif
-    
+
     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseScanner"
             aria-expanded="true" aria-controls="collapseScanner">
@@ -89,7 +90,7 @@
             </div>
         </div>
     </li>
-    
+
     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseCanteen"
             aria-expanded="true" aria-controls="collapseCanteen">
@@ -99,23 +100,25 @@
         <div id="collapseCanteen" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             @if($auth == true)
                 @if($roleusers[0]->rolename == 'HR' || $roleusers[0]->rolename == 'Admin')
-                <div class="bg-white py-2 collapse-inner rounded">
-                    <a class="collapse-item" href="{{ route('canteen.index') }}">Data Kantin</a>
-                    <a class="collapse-item" href="{{ route('scanner.barcodescanning1') }}">Barcode Scanner 1</a>
-                    <a class="collapse-item" href="{{ route('scanner.barcodescanning2') }}">Barcode Scanner 2</a>
-                    <!-- <a class="collapse-item" href="{{ route('canteen.scancanteen1') }}">QR Canteen 1</a>
-                    <a class="collapse-item" href="{{ route('canteen.scancanteen2') }}">QR Canteen 2</a> -->
-                </div>
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" href="{{ route('canteen.index') }}">Data Kantin</a>
+                        <a class="collapse-item" href="{{ route('scanner.barcodescanning1') }}">Barcode Scanner 1</a>
+                        <a class="collapse-item" href="{{ route('scanner.barcodescanning2') }}">Barcode Scanner 2</a>
+                        <!-- <a class="collapse-item" href="{{ route('canteen.scancanteen1') }}">QR Canteen 1</a>
+                                            <a class="collapse-item" href="{{ route('canteen.scancanteen2') }}">QR Canteen 2</a> -->
+                    </div>
                 @endif
             @else
-            <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item" href="{{ route('scanner.barcodescanning1') }}">Barcode Scanner 1</a>
-                <a class="collapse-item" href="{{ route('scanner.barcodescanning2') }}">Barcode Scanner 2</a>
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <a class="collapse-item" href="{{ route('scanner.barcodescanning1') }}">Barcode Scanner 1</a>
+                    <a class="collapse-item" href="{{ route('scanner.barcodescanning2') }}">Barcode Scanner 2</a>
 
-                <!-- Kantin 1 Livewire -->
-                 <a class="collapse-item" href="{{ route('scanner.livewire.canteen1') }}">Livewire Scanner 1</a>
-                 <a class="collapse-item" href="{{ route('scanner.livewire.canteen2') }}">Livewire Scanner 2</a>
-            </div>
+                    <a class="collapse-item" href="{{ route('scanner.duplicate') }}">Duplicate Scanner</a>
+
+                    <!-- Kantin 1 Livewire -->
+                    <a class="collapse-item" href="{{ route('scanner.livewire.canteen1') }}">Livewire Scanner 1</a>
+                    <a class="collapse-item" href="{{ route('scanner.livewire.canteen2') }}">Livewire Scanner 2</a>
+                </div>
             @endif
         </div>
     </li>
